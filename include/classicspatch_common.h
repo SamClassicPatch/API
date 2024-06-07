@@ -29,6 +29,9 @@ typedef unsigned short int  UWORD;
 typedef unsigned char       UBYTE;
 typedef unsigned int        UINT;
 
+typedef      int BOOL;
+typedef long int INDEX;
+
 // A fixed-size buffer to receive an error message that is returned by some API calls
 const int k_cchMaxClassicsPatchErrMsg = 1024;
 typedef char ClassicsPatchErrMsg[k_cchMaxClassicsPatchErrMsg];

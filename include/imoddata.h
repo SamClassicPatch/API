@@ -83,9 +83,9 @@ PATCH_API int PATCH_CALLTYPE ClassicsModData_DiffArrayLength(void);
 // Reset every difficulty in the array starting from a specific one
 // Useful when setting up own list of difficulties
 // Example usage:
-//    *ClassicsModData_GetDifficulty(0) = ModDifficulty_t(0, "Easy",   "time to relax");
-//    *ClassicsModData_GetDifficulty(1) = ModDifficulty_t(1, "Normal", "recommended experience");
-//    *ClassicsModData_GetDifficulty(2) = ModDifficulty_t(2, "Hard",   "for the worthy", "gam_bHardDifficulty");
+//    *ClassicsModData_GetDiff(0) = ModDifficulty_t(0, "Easy",   "time to relax");
+//    *ClassicsModData_GetDiff(1) = ModDifficulty_t(1, "Normal", "recommended experience");
+//    *ClassicsModData_GetDiff(2) = ModDifficulty_t(2, "Hard",   "for the worthy", "gam_bHardDifficulty");
 //    ClassicsModData_ClearDiffArray(3); // Clear the rest
 PATCH_API void PATCH_CALLTYPE ClassicsModData_ClearDiffArray(int iFromDifficulty = 0);
 

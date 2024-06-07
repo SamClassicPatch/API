@@ -11,6 +11,7 @@
 
 // All interfaces
 #include "functionpatches.h"
+#include "ichat.h"
 #include "iconfig.h"
 #include "icore.h"
 #include "igame.h"

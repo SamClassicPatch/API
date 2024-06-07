@@ -16,7 +16,7 @@ PATCH_API PatchVer_t PATCH_CALLTYPE ClassicsCore_GetVersion(void);
 PATCH_API const PatchVerString_t &PATCH_CALLTYPE ClassicsCore_GetVersionName(void);
 
 // Get type of the application that Classics Patch is running on
-// Always returns k_EClassicsPatchAppType_Unknown until ClassicsPatchAPI_Setup is called
+// Always returns k_EClassicsPatchAppType_Unknown until ClassicsPatchAPI_Setup() is called
 PATCH_API EClassicsPatchAppType PATCH_CALLTYPE ClassicsCore_GetAppType(void);
 
 // Wrappers for convenience
