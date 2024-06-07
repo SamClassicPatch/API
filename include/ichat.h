@@ -12,7 +12,12 @@
 //  class CTString {
 //    public: char *str_String;
 //  };
+// It is *not recommended* to set new buffers to strResult.str_String manually!
 class CTString;
+
+// A fixed-size buffer for exchanging strings through chat command functions
+const int k_cchMaxChatCommandResultStr = 1024;
+typedef char ChatCommandResultStr[k_cchMaxChatCommandResultStr];
 
 // Pointer to the chat command function
 // strResult - Message that will be shown to the client after executing the command
@@ -22,10 +27,18 @@ class CTString;
 // Return value signifies whether or not the command should be displayed in chat as a regular message
 // Typically, if the command cannot/shouldn't be processed for some reason (e.g. if the client index doesn't belong to the host),
 // the function must return false (but can still perform necessary internal actions), otherwise it's almost always true
-typedef BOOL (*FChatCommand)(CTString &strResult, INDEX iClient, const CTString &strArguments);
+typedef BOOL (*FEngineChatCommand)(CTString &strResult, INDEX iClient, const CTString &strArguments);
 
-// Register a new chat command
-PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommand(const char *strName, FChatCommand pFunction);
+// Function prototype compatible with C API
+// These functions should be used instead of FEngineChatCommand when Serious Engine is not available *or* your module
+// is built using a compiler that differs from the one Serious Engine was build with (MSVC 6.0 for 1.05 and 1.07)
+typedef BOOL (*FPureChatCommand)(ChatCommandResultStr &strResult, INDEX iClient, const char *strArguments);
+
+// Register a new chat command with Serious Engine compatible function
+PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommand(const char *strName, FEngineChatCommand pFunction);
+
+// Register a new chat command with pure C function
+PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommandPure(const char *strName, FPureChatCommand pFunction);
 
 // Unregister a chat command by its name
 PATCH_API void PATCH_CALLTYPE ClassicsChat_UnregisterCommand(const char *strName);
