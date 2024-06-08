@@ -7,6 +7,7 @@
 #endif
 
 #include "classicspatch_common.h"
+#include "pluginevents.h"
 #include "plugintypes.h"
 
 class IClassicsPlugins
