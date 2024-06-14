@@ -31,6 +31,11 @@ struct FuncPatch_t
 // Handle type for referencing specific function patches
 typedef FuncPatch_t *HFuncPatch;
 
+// Set debug state for all function patchers
+// When enabled, outputs specific patcher actions in console (and as message box popups)
+// upon trying to patch a series of instructions in some function for debugging purposes
+PATCH_API void PATCH_CALLTYPE FuncPatch_SetDebug(bool bState);
+
 // Set length of instruction(s) that will be replaced with a jump instruction without manually checking them
 // This function should be called before CreateOpcodePatch(), after which it resets its state
 //
@@ -71,4 +76,4 @@ PATCH_API void PATCH_CALLTYPE DestroyPatch(HFuncPatch hPatch);
 // Find function patch in the registry by its identifier
 PATCH_API HFuncPatch PATCH_CALLTYPE FuncPatch_FindByName(const char *strIdentifier);
 
-#endif // CLASSICSPATCH_PATCHTYPE_H
+#endif // CLASSICSPATCH_FUNCTIONPATCHES_H
