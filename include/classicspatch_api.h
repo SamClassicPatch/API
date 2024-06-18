@@ -10,6 +10,7 @@
 #include "classicspatch_common.h"
 
 // All interfaces
+#include "extpackets.h"
 #include "functionpatches.h"
 #include "ichat.h"
 #include "iconfig.h"
