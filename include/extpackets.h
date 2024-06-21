@@ -36,10 +36,24 @@
 // using their type for custom processing, if necessary, albeit not recommended.
 //================================================================================================//
 
+class IClassicsExtPacket;
+
+// Report packet actions to the server
+PATCH_API void PATCH_CALLTYPE ClassicsPackets_ServerReport(IClassicsExtPacket *pExtPacket, const char *strFormat, ...);
+
+// Send extension packet from server to all clients
+PATCH_API void PATCH_CALLTYPE ClassicsPackets_SendToClients(IClassicsExtPacket *pExtPacket);
+
+// Send extension packet from a client to the server
+PATCH_API void PATCH_CALLTYPE ClassicsPackets_SendToServer(IClassicsExtPacket *pExtPacket);
+
 // Abstract base for extension packets
 class IClassicsExtPacket
 {
 public:
+  __forceinline void SendToClients(void) { ClassicsPackets_SendToClients(this); };
+  __forceinline void SendToServer(void) { ClassicsPackets_SendToServer(this); };
+
   // Built-in extension packets
   enum EPacketType {
     // Server to all clients
@@ -97,11 +111,5 @@ public:
   // Process the packet as a client
   virtual void Process(void) = 0;
 };
-
-// Report packet actions to the server
-PATCH_API void PATCH_CALLTYPE ClassicsPackets_ServerReport(IClassicsExtPacket *pExtPacket, const char *strFormat, ...);
-
-// Send extension packet from server to all clients
-PATCH_API void PATCH_CALLTYPE ClassicsPackets_Send(IClassicsExtPacket *pExtPacket);
 
 #endif // CLASSICSPATCH_EXTPACKETS_H
