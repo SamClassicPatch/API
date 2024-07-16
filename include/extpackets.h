@@ -57,6 +57,8 @@ public:
   // Built-in extension packets
   enum EPacketType {
     // Server to all clients
+    k_EPacketType_FirstS2C = 0, // First server-to-client packet index
+
     k_EPacketType_EntityCreate   =  0, // Create new entity
     k_EPacketType_EntityDelete   =  1, // Delete an entity
     k_EPacketType_EntityCopy     =  2, // Copy an entity
@@ -81,8 +83,12 @@ public:
     k_EPacketType_SessionProps   = 20, // Change data in session properties
     k_EPacketType_GameplayExt    = 21, // Change data in gameplay extensions
 
+    k_EPacketType_LastS2C = 999, // Last server-to-client packet index
+
     // Client to server
-    k_EPacketType_C2SReserved = 1000, // Reserved index; do not use
+    k_EPacketType_FirstC2S = 1000, // First client-to-server packet index
+
+    k_EPacketType_LastC2S = 1999, // Last client-to-server packet index
 
     // Maximum amount of built-in packets, after which custom packets can be added
     k_EPacketType_Max = 2000, // 2000 built-in packets should be enough
@@ -113,12 +119,75 @@ public:
 };
 
 //================================================================================================//
+// Built-in extension packets
+//
+// This is an abstract base for built-in extension packets that can be externally instantiated,
+// configured and sent.
+// This class should *not* be used for defining custom extension packets!
+//================================================================================================//
+
+class IClassicsBuiltInExtPacket;
+
+// Retrieve value from a bool property of a built-in extension packet
+PATCH_API bool PATCH_CALLTYPE ClassicsPackets_GetBoolProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty);
+
+// Retrieve value from an integer property of a built-in extension packet
+PATCH_API int PATCH_CALLTYPE ClassicsPackets_GetIntProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty);
+
+// Retrieve value from a float property of a built-in extension packet
+PATCH_API double PATCH_CALLTYPE ClassicsPackets_GetFloatProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty);
+
+// Retrieve value from a string property of a built-in extension packet
+PATCH_API const char *PATCH_CALLTYPE ClassicsPackets_GetStringProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty);
+
+// Set value to a bool property of a built-in extension packet
+// Returns whether or not the value has been set
+PATCH_API bool PATCH_CALLTYPE ClassicsPackets_SetBoolProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty, bool bValue);
+
+// Set value to an integer property of a built-in extension packet
+// Returns whether or not the value has been set
+PATCH_API bool PATCH_CALLTYPE ClassicsPackets_SetIntProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty, int iValue);
+
+// Set value to a float property of a built-in extension packet
+// Returns whether or not the value has been set
+PATCH_API bool PATCH_CALLTYPE ClassicsPackets_SetFloatProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty, double fValue);
+
+// Set value to a string property of a built-in extension packet
+// Returns whether or not the value has been set
+PATCH_API bool PATCH_CALLTYPE ClassicsPackets_SetStringProp(IClassicsBuiltInExtPacket *pExtPacket, const char *strProperty, const char *strValue);
+
+// Abstract base for built-in extension packets that can be externally instantiated, configured and sent
+// This class should *not* be used for defining custom extension packets!
+class IClassicsBuiltInExtPacket : public IClassicsExtPacket
+{
+public:
+  virtual bool GetBoolProp(const char *strProperty) { return ClassicsPackets_GetBoolProp(this, strProperty); };
+  virtual int GetIntProp(const char *strProperty) { return ClassicsPackets_GetIntProp(this, strProperty); };
+  virtual double GetFloatProp(const char *strProperty) { return ClassicsPackets_GetFloatProp(this, strProperty); };
+  virtual const char *GetStringProp(const char *strProperty) { return ClassicsPackets_GetStringProp(this, strProperty); };
+
+  virtual bool SetBoolProp(const char *strProperty, bool bValue) { return ClassicsPackets_SetBoolProp(this, strProperty, bValue); };
+  virtual bool SetIntProp(const char *strProperty, int iValue) { return ClassicsPackets_SetIntProp(this, strProperty, iValue); };
+  virtual bool SetFloatProp(const char *strProperty, double fValue) { return ClassicsPackets_SetFloatProp(this, strProperty, fValue); };
+  virtual bool SetStringProp(const char *strProperty, const char *strValue) { return ClassicsPackets_SetStringProp(this, strProperty, strValue); };
+};
+
+// Create a built-in extension packet from some type and return a pointer to it
+// After the packet has been sent or processed, it needs to be manually deleted using ClassicsPackets_Destroy()
+PATCH_API IClassicsBuiltInExtPacket *PATCH_CALLTYPE ClassicsPackets_Create(IClassicsExtPacket::EPacketType ePacket);
+
+// Destroy previously created built-in extension packet
+PATCH_API void PATCH_CALLTYPE ClassicsPackets_Destroy(IClassicsBuiltInExtPacket *pExtPacket);
+
+//================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
 
 class IClassicsPackets
 {
 public:
+  virtual IClassicsBuiltInExtPacket *Create(IClassicsExtPacket::EPacketType ePacket) { return ClassicsPackets_Create(ePacket); };
+  virtual void Destroy(IClassicsBuiltInExtPacket *pExtPacket) { ClassicsPackets_Destroy(pExtPacket); };
 };
 
 #endif // CLASSICSPATCH_EXTPACKETS_H
