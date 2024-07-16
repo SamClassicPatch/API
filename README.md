@@ -16,9 +16,18 @@ Every time a new Classics Patch update is released, `lib/classicscore.lib` is up
 
 This API is largely inspired by [Steamworks API](https://partner.steamgames.com/), where functions are divided into so-called "interfaces".
 
-The key difference from Steamworks API though is that this API is more "flat", with most functions using plain C linkage and calling conventions instead of residing inside C++ interface classes. That's because as long as Classics Patch is loaded in memory, these functions may be called at any time without the need to check which interface is available.
+### C API
+The key difference from Steamworks API though is that this API is more "flat", with most functions using plain C linkage and calling conventions instead of residing inside C++ interface classes.
 
-Still, some functions **are** behind interface classes that provide a special accessor method that returns a pointer to the interface whenever it's available. If it's not (for example when Classics Patch hasn't been initialized yet), the interface accessors return `NULL`.
+That's because as long as Classics Patch is loaded in memory, these functions may be called at any time without the need to check which interface is available.
+
+### C++ API (optional)
+This API also has a virtual C++ interface as an extra that simply wraps every C method into a virtual function under a specific class with a special accessor method.
+
+This is mostly useful when accessing the API through the game shell instead of directly linking the core library. For example, when you want to optionally interact with the patch through your mod but you're not certain whether your mod is being played through the patch or not.
+
+> [!WARNING]
+In very rare circumstances when Classics Patch hasn't been initialized yet, the interface accessors return `NULL` and the main virtual interface **cannot** be retrieved through the game shell!
 
 ## Usage
 
