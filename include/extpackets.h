@@ -51,8 +51,8 @@ PATCH_API void PATCH_CALLTYPE ClassicsPackets_SendToServer(IClassicsExtPacket *p
 class IClassicsExtPacket
 {
 public:
-  __forceinline void SendToClients(void) { ClassicsPackets_SendToClients(this); };
-  __forceinline void SendToServer(void) { ClassicsPackets_SendToServer(this); };
+  virtual void SendToClients(void) { ClassicsPackets_SendToClients(this); };
+  virtual void SendToServer(void) { ClassicsPackets_SendToServer(this); };
 
   // Built-in extension packets
   enum EPacketType {
@@ -101,15 +101,24 @@ public:
   // Internal name of the extension packet type (usually equal to enum type)
   virtual const char *GetName(void) const = 0;
 
-  // Write extension packet before sending it
+  // Needs to be redefined to write specific extension packet data that will be sent
   // Returns true if the packet has been written successfully and is ready to be sent
-  virtual bool Write(class CNetworkMessage &nm) = 0;
+  virtual bool Write(class CNetworkMessage &nm) { return false; };
 
-  // Read received extension packet before processing it
-  virtual void Read(class CNetworkMessage &nm) = 0;
+  // Needs to be redefined to read received extension packet data as it was written
+  virtual void Read(class CNetworkMessage &nm) {};
 
-  // Process the packet as a client
-  virtual void Process(void) = 0;
+  // Needs to be redefined to specify logic that will be executed after receiving and reading the packet
+  virtual void Process(void) {};
+};
+
+//================================================================================================//
+// Virtual Classics Patch API
+//================================================================================================//
+
+class IClassicsPackets
+{
+public:
 };
 
 #endif // CLASSICSPATCH_EXTPACKETS_H

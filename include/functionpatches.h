@@ -76,4 +76,18 @@ PATCH_API void PATCH_CALLTYPE DestroyPatch(HFuncPatch hPatch);
 // Find function patch in the registry by its identifier
 PATCH_API HFuncPatch PATCH_CALLTYPE FuncPatch_FindByName(const char *strIdentifier);
 
+//================================================================================================//
+// Virtual Classics Patch API
+//================================================================================================//
+
+class IClassicsFuncPatches
+{
+public:
+  virtual void SetDebug(bool bState) { FuncPatch_SetDebug(bState); };
+  virtual void ForceRewrite(int nBytes) { FuncPatch_ForceRewrite(nBytes); };
+  virtual HFuncPatch CreateOpcodePatch(void *pOpcodeToReplace, long iJumpDestinationAddress, const char *strIdentifier) { return ::CreateOpcodePatch(pOpcodeToReplace, iJumpDestinationAddress, strIdentifier); };
+  virtual void DestroyPatch(HFuncPatch hPatch) { ::DestroyPatch(hPatch); };
+  virtual HFuncPatch FindByName(const char *strIdentifier) { return FuncPatch_FindByName(strIdentifier); };
+};
+
 #endif // CLASSICSPATCH_FUNCTIONPATCHES_H

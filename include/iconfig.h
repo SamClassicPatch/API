@@ -72,4 +72,26 @@ PATCH_API float PATCH_CALLTYPE ClassicsGameplayExt_GetFloat(EGameplayExt eExtens
 // Retrieve value from a string gameplay extension
 PATCH_API const char *PATCH_CALLTYPE ClassicsGameplayExt_GetString(EGameplayExt eExtension);
 
+//================================================================================================//
+// Virtual Classics Patch API
+//================================================================================================//
+
+class IClassicsConfig
+{
+public:
+  virtual bool IsTrue(EConfigProps eProperty) { return ClassicsConfig_IsTrue(eProperty); };
+  virtual int GetInt(EConfigProps eProperty) { return ClassicsConfig_GetInt(eProperty); };
+  virtual float GetFloat(EConfigProps eProperty) { return ClassicsConfig_GetFloat(eProperty); };
+  virtual const char *GetString(EConfigProps eProperty) { return ClassicsConfig_GetString(eProperty); };
+};
+
+class IClassicsGameplayExt
+{
+public:
+  virtual bool IsTrue(EGameplayExt eExtension) { return ClassicsGameplayExt_IsTrue(eExtension); };
+  virtual int GetInt(EGameplayExt eExtension) { return ClassicsGameplayExt_GetInt(eExtension); };
+  virtual float GetFloat(EGameplayExt eExtension) { return ClassicsGameplayExt_GetFloat(eExtension); };
+  virtual const char *GetString(EGameplayExt eExtension) { return ClassicsGameplayExt_GetString(eExtension); };
+};
+
 #endif // CLASSICSPATCH_ICONFIG_H

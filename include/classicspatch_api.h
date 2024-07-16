@@ -67,4 +67,35 @@ PATCH_API void PATCH_CALLTYPE ClassicsPatch_Init(void);
 // Should be called *before* Serious Engine shutdown (SE_EndEngine) in order to wrap up Classics Patch
 PATCH_API void PATCH_CALLTYPE ClassicsPatch_Shutdown(void);
 
+//================================================================================================//
+// Virtual Classics Patch API
+//
+// This virtual interface can be used when there is any problem with direct linking of the core
+// library (classicscore.lib) or there is any sort of need for a C++ API.
+// If the API library is not linked, this interface can only be accessed *after* Classics Patch
+// initialization through the game shell using "CoreAPI" symbol like this:
+//    CShellSymbol *pssAPI = _pShell->GetSymbol("CoreAPI", TRUE);
+//
+// CShellSymbol::ss_pvValue of the retrieved symbol (if found) is set to the exact same value
+// as returned by the ClassicsPatchAPI() method.
+//================================================================================================//
+
+// Main virtual interface for accessing other interfaces
+class IClassicsPatchAPI
+{
+public:
+  virtual IClassicsChat *Chat(void) = 0;
+  virtual IClassicsConfig *Config(void) = 0;
+  virtual IClassicsGameplayExt *GameplayExt(void) = 0;
+  virtual IClassicsCore *Core(void) = 0;
+  virtual IClassicsGame *Game(void) = 0;
+  virtual IClassicsModData *ModData(void) = 0;
+  virtual IClassicsPlugins *Plugins(void) = 0;
+  virtual IClassicsFuncPatches *FuncPatches(void) = 0;
+  virtual IClassicsPackets *Packets(void) = 0;
+};
+
+// Retrieve pointer to the main virtual interface
+PATCH_API IClassicsPatchAPI *PATCH_CALLTYPE ClassicsPatchAPI(void);
+
 #endif // CLASSICSPATCH_API_H

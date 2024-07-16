@@ -43,4 +43,16 @@ PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommandPure(const char *strNa
 // Unregister a chat command by its name
 PATCH_API void PATCH_CALLTYPE ClassicsChat_UnregisterCommand(const char *strName);
 
+//================================================================================================//
+// Virtual Classics Patch API
+//================================================================================================//
+
+class IClassicsChat
+{
+public:
+  virtual void RegisterCommand(const char *strName, FEngineChatCommand pFunction) { ClassicsChat_RegisterCommand(strName, pFunction); };
+  virtual void RegisterCommandPure(const char *strName, FPureChatCommand pFunction) { ClassicsChat_RegisterCommandPure(strName, pFunction); };
+  virtual void UnregisterCommand(const char *strName) { ClassicsChat_UnregisterCommand(strName); };
+};
+
 #endif // CLASSICSPATCH_ICHAT_H

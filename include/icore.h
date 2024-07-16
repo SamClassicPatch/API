@@ -62,4 +62,28 @@ PATCH_API void *PATCH_CALLTYPE ClassicsCore_GetEngineSymbol(const char *strSymbo
 // Retrieve address from the currently loaded Entities library by a symbol name
 PATCH_API void *PATCH_CALLTYPE ClassicsCore_GetEntitiesSymbol(const char *strSymbol);
 
+//================================================================================================//
+// Virtual Classics Patch API
+//================================================================================================//
+
+class IClassicsCore
+{
+public:
+  virtual PatchVer_t GetVersion(void) { return ClassicsCore_GetVersion(); };
+  virtual const PatchVerString_t &GetVersionName(void) { return ClassicsCore_GetVersionName(); };
+  virtual EClassicsPatchAppType GetAppType(void) { return ClassicsCore_GetAppType(); };
+  virtual EClassicsPatchSeason GetSeason(void) { return ClassicsCore_GetSeason(); };
+
+  virtual bool IsCustomModActive(void) { return ClassicsCore_IsCustomModActive(); };
+  virtual void SetCustomMod(bool bState) { ClassicsCore_SetCustomMod(bState); };
+  virtual const char *GetVanillaExt(void) { return ClassicsCore_GetVanillaExt(); };
+
+  virtual const char *GetEntitiesPath(void) { return ClassicsCore_GetEntitiesPath(); };
+  virtual bool IsEntitiesModded(void) { return ClassicsCore_IsEntitiesModded(); };
+  virtual HMODULE GetEngineHandle(void) { return ClassicsCore_GetEngineHandle(); };
+  virtual HMODULE GetEntitiesHandle(void) { return ClassicsCore_GetEntitiesHandle(); };
+  virtual void *GetEngineSymbol(const char *strSymbol) { return ClassicsCore_GetEntitiesSymbol(strSymbol); };
+  virtual void *GetEntitiesSymbol(const char *strSymbol) { return ClassicsCore_GetEntitiesSymbol(strSymbol); };
+};
+
 #endif // CLASSICSPATCH_ICORE_H

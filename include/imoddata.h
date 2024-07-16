@@ -100,4 +100,24 @@ PATCH_API int PATCH_CALLTYPE ClassicsModData_CountNamedDiffs(void);
 // Find difficulty index by its level
 PATCH_API int PATCH_CALLTYPE ClassicsModData_FindDiffByLevel(int iLevel);
 
+//================================================================================================//
+// Virtual Classics Patch API
+//================================================================================================//
+
+class IClassicsModData
+{
+public:
+  virtual bool IsTrue(EModDataProps eProperty) { return ClassicsModData_IsTrue(eProperty); };
+  virtual int GetInt(EModDataProps eProperty) { return ClassicsModData_GetInt(eProperty); };
+  virtual float GetFloat(EModDataProps eProperty) { return ClassicsModData_GetFloat(eProperty); };
+  virtual const char *GetString(EModDataProps eProperty) { return ClassicsModData_GetString(eProperty); };
+
+  virtual ModDifficulty_t *GetDiff(int iDifficulty) { return ClassicsModData_GetDiff(iDifficulty); };
+  virtual int DiffArrayLength(void) { return ClassicsModData_DiffArrayLength(); };
+  virtual void ClearDiffArray(int iFromDifficulty = 0) { ClassicsModData_ClearDiffArray(iFromDifficulty); };
+  virtual bool IsDiffActive(int iDifficulty) { return ClassicsModData_IsDiffActive(iDifficulty); };
+  virtual int CountNamedDiffs(void) { return ClassicsModData_CountNamedDiffs(); };
+  virtual int FindDiffByLevel(int iLevel) { return ClassicsModData_FindDiffByLevel(iLevel); };
+};
+
 #endif // CLASSICSPATCH_IMODDATA_H
