@@ -24,6 +24,7 @@ enum EConfigProps
   k_EConfigProps_DPIAware           = 22,
   k_EConfigProps_ExtendedFileSystem = 23,
   k_EConfigProps_FullAppIntegration = 24,
+  k_EConfigProps_NotifyAboutUpdates = 25,
 
   // Steam API
   k_EConfigProps_SteamEnable     = 40, // Initialize and use Steamworks API
