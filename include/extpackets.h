@@ -82,6 +82,7 @@ public:
     k_EPacketType_ChangeWorld    = 19, // Force immediate world change regardless of gameplay
     k_EPacketType_SessionProps   = 20, // Change data in session properties
     k_EPacketType_GameplayExt    = 21, // Change data in gameplay extensions
+    k_EPacketType_PlaySound      = 22, // Play some sound globally
 
     k_EPacketType_LastS2C = 999, // Last server-to-client packet index
 
