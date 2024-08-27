@@ -73,8 +73,12 @@ PATCH_API void PATCH_CALLTYPE ClassicsPatch_Shutdown(void);
 // This virtual interface can be used when there is any problem with direct linking of the core
 // library (classicscore.lib) or there is any sort of need for a C++ API.
 // If the API library is not linked, this interface can only be accessed *after* Classics Patch
-// initialization through the game shell using "CoreAPI" symbol like this:
-//    CShellSymbol *pssAPI = _pShell->GetSymbol("CoreAPI", TRUE);
+// initialization through the game shell using "ClassicsPatchAPI" symbol like this:
+//    CShellSymbol *pssAPI = _pShell->GetSymbol("ClassicsPatchAPI", TRUE);
+//
+// NOTE: The old "CoreAPI" symbol is still available but is now deprecated and acts as an alias
+// for the new symbol. It is left purely for compatibility purposes in case some mod checks for
+// the presence of Classics Patch. It *cannot* be used to access the old-style API!
 //
 // CShellSymbol::ss_pvValue of the retrieved symbol (if found) is set to the exact same value
 // as returned by the ClassicsPatchAPI() method.
