@@ -52,7 +52,7 @@ PATCH_API bool PATCH_CALLTYPE ClassicsPatchAPI_IsRunning(void);
 //================================================================================================//
 // Classics Patch setup & shutdown
 //
-// For initialization and shutdown the patch from projects that implement its functionality.
+// For initialization and shutdown of the patch from projects that implement its functionality.
 // These functions should not be used by external modules, unless they're never called by the
 // main project that the module is trying to interact with (e.g. via code injection).
 //================================================================================================//

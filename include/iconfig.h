@@ -11,25 +11,25 @@
 enum EConfigProps
 {
   // Mounting properties
-  k_EConfigProps_TFEMount         = 0,
-  k_EConfigProps_TFEDir           = 1,
-  k_EConfigProps_SSRMount         = 2,
-  k_EConfigProps_SSRDir           = 3,
-  k_EConfigProps_SSRWorkshopMount = 4,
-  k_EConfigProps_SSRWorkshopDir   = 5,
+  k_EConfigProps_TFEMount         = 0, // [bool]
+  k_EConfigProps_TFEDir           = 1, // [string]
+  k_EConfigProps_SSRMount         = 2, // [bool]
+  k_EConfigProps_SSRDir           = 3, // [string]
+  k_EConfigProps_SSRWorkshopMount = 4, // [bool]
+  k_EConfigProps_SSRWorkshopDir   = 5, // [string]
 
   // Global properties
-  k_EConfigProps_CustomMod          = 20,
-  k_EConfigProps_DebugPatcher       = 21,
-  k_EConfigProps_DPIAware           = 22,
-  k_EConfigProps_ExtendedFileSystem = 23,
-  k_EConfigProps_FullAppIntegration = 24,
-  k_EConfigProps_NotifyAboutUpdates = 25,
+  k_EConfigProps_CustomMod          = 20, // [bool]
+  k_EConfigProps_DebugPatcher       = 21, // [bool]
+  k_EConfigProps_DPIAware           = 22, // [bool]
+  k_EConfigProps_ExtendedFileSystem = 23, // [bool]
+  k_EConfigProps_FullAppIntegration = 24, // [bool]
+  k_EConfigProps_NotifyAboutUpdates = 25, // [bool]
 
   // Steam API
-  k_EConfigProps_SteamEnable     = 40, // Initialize and use Steamworks API
-  k_EConfigProps_SteamForServers = 41, // Initialize for dedicated servers
-  k_EConfigProps_SteamForTools   = 42, // Initialize for tool applications
+  k_EConfigProps_SteamEnable     = 40, // [bool] Initialize and use Steamworks API
+  k_EConfigProps_SteamForServers = 41, // [bool] Initialize for dedicated servers
+  k_EConfigProps_SteamForTools   = 42, // [bool] Initialize for tool applications
 
   k_EConfigProps_Max,
 };
@@ -49,14 +49,14 @@ PATCH_API const char *PATCH_CALLTYPE ClassicsConfig_GetString(EConfigProps eProp
 enum EGameplayExt
 {
   // Global
-  k_EGameplayExt_Enable              = 0, // Utilize gameplay extensions (if disabled, resets other settings to vanilla)
-  k_EGameplayExt_FixTimers           = 1, // Fix timers for entity logic to delay slowdown bug
-  k_EGameplayExt_GravityAcc          = 2, // Gravity acceleration multiplier
+  k_EGameplayExt_Enable              = 0, // [bool] Utilize gameplay extensions (if disabled, resets other settings to vanilla)
+  k_EGameplayExt_FixTimers           = 1, // [bool] Fix timers for entity logic to delay slowdown bug
+  k_EGameplayExt_GravityAcc          = 2, // [float] Gravity acceleration multiplier
 
   // Custom mod only
-  k_EGameplayExt_UnlimitedAirControl = 10, // Let players move while in air indefinitely
-  k_EGameplayExt_MoveSpeed           = 11, // Movement speed multiplier
-  k_EGameplayExt_JumpHeight          = 12, // Jump height multiplier
+  k_EGameplayExt_UnlimitedAirControl = 10, // [bool] Let players move while in air indefinitely
+  k_EGameplayExt_MoveSpeed           = 11, // [float] Movement speed multiplier
+  k_EGameplayExt_JumpHeight          = 12, // [float] Jump height multiplier
 
   k_EGameplayExt_Max,
 };

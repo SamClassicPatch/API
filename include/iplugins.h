@@ -65,7 +65,7 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 // Define plugin shutdown method
 // Example usage:
 //    CLASSICSPATCH_PLUGIN_SHUTDOWN(CIniConfig &props) {
-//      ...startup code and optional interaction with plugin properties...
+//      ...shutdown code and optional interaction with plugin properties...
 //    };
 #define CLASSICSPATCH_PLUGIN_SHUTDOWN MODULE_API void PLUGINMODULEMETHOD_SHUTDOWN
 

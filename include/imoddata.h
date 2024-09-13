@@ -10,10 +10,10 @@
 
 enum EModDataProps
 {
-  k_EModDataProps_AdjustFOV         = 0, // Adjust FOV depending on aspect ratio
-  k_EModDataProps_AdjustAR          = 1, // Set wide adjustment based on aspect ratio
-  k_EModDataProps_ProperTextScaling = 2, // Adjust scaling of menu text based on screen height instead of width
-  k_EModDataProps_MenuTextScale     = 3, // Additional scale multiplication of menu text
+  k_EModDataProps_AdjustFOV         = 0, // [bool] Adjust FOV depending on aspect ratio
+  k_EModDataProps_AdjustAR          = 1, // [bool] Set wide adjustment based on aspect ratio
+  k_EModDataProps_ProperTextScaling = 2, // [bool] Adjust scaling of menu text based on screen height instead of width
+  k_EModDataProps_MenuTextScale     = 3, // [float] Additional scale multiplication of menu text
 
   k_EModDataProps_Max,
 };
