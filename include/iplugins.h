@@ -57,7 +57,7 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 
 // Define plugin startup method
 // Example usage:
-//    CLASSICSPATCH_PLUGIN_STARTUP(CIniConfig &props) {
+//    CLASSICSPATCH_PLUGIN_STARTUP(CIniConfig &props, PluginEvents_t &events) {
 //      ...startup code and optional interaction with plugin properties...
 //    };
 #define CLASSICSPATCH_PLUGIN_STARTUP MODULE_API void PLUGINMODULEMETHOD_STARTUP
