@@ -57,6 +57,7 @@ enum EGameplayExt
   k_EGameplayExt_UnlimitedAirControl = 10, // [bool] Let players move while in air indefinitely
   k_EGameplayExt_MoveSpeed           = 11, // [float] Movement speed multiplier
   k_EGameplayExt_JumpHeight          = 12, // [float] Jump height multiplier
+  k_EGameplayExt_FastKnife           = 13, // [bool] Increase movement speed while holding a knife in Cooperative mode
 
   k_EGameplayExt_Max,
 };

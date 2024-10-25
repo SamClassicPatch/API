@@ -16,7 +16,7 @@ PATCH_API PatchVer_t PATCH_CALLTYPE ClassicsCore_GetVersion(void);
 PATCH_API const PatchVerString_t &PATCH_CALLTYPE ClassicsCore_GetVersionName(void);
 
 // Get type of the application that Classics Patch is running on
-// Always returns k_EClassicsPatchAppType_Unknown until ClassicsPatchAPI_Setup is called
+// Always returns k_EClassicsPatchAppType_Unknown until ClassicsPatchAPI_Setup() is called
 PATCH_API EClassicsPatchAppType PATCH_CALLTYPE ClassicsCore_GetAppType(void);
 
 // Wrappers for convenience
@@ -26,7 +26,7 @@ inline bool ClassicsCore_IsEditorApp(void)  { return (ClassicsCore_GetAppType() 
 inline bool ClassicsCore_IsModelerApp(void) { return (ClassicsCore_GetAppType() == k_EClassicsPatchAppType_Modeler); };
 
 // Get current seasonal event
-// Always returns k_EClassicsPatchSeason_None until ClassicsPatchAPI_Init is called
+// Always returns k_EClassicsPatchSeason_None until ClassicsPatchAPI_Init() is called
 PATCH_API EClassicsPatchSeason PATCH_CALLTYPE ClassicsCore_GetSeason(void);
 
 // Check if Classics Patch is using its own custom mod over vanilla entity logic
