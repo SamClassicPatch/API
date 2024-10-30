@@ -102,4 +102,48 @@ public:
 // Retrieve pointer to the main virtual interface
 PATCH_API IClassicsPatchAPI *PATCH_CALLTYPE ClassicsPatchAPI(void);
 
+// Pointers to extra functions that aren't available through the main virtual interface
+struct ClassicsPatchGlobalFunctions
+{
+  typedef EVerifyAPIResult (PATCH_CALLTYPE *FVerifyInternal)(PatchVer_t, ClassicsPatchErrMsg *);
+  typedef bool (PATCH_CALLTYPE *FIsRunning)(void);
+  typedef void (PATCH_CALLTYPE *FSetup)(EClassicsPatchAppType);
+  typedef void (PATCH_CALLTYPE *FInit)(void);
+  typedef void (PATCH_CALLTYPE *FShutdown)(void);
+
+  FVerifyInternal _VerifyInternal;
+  FIsRunning _IsRunning;
+  FSetup _Setup;
+  FInit _Init;
+  FShutdown _Shutdown;
+
+  // Simple wrapper for ClassicsPatchAPI_Verify()
+  inline EVerifyAPIResult _Verify(ClassicsPatchErrMsg *pOutErrMsg) {
+    return _VerifyInternal(CLASSICSPATCH_INTERFACE_VERSION, pOutErrMsg);
+  };
+};
+
+// Retrieve pointers to some global functions directly from the module
+// This function should be used when the library cannot be directly linked, like this:
+//    ClassicsPatchGlobalFunctions functions;
+//
+//    if (ClassicsPatch_GetGlobalFunctionsFromModule(&functions)) {
+//      // Call functions by pointers from the struct
+//    }
+inline bool ClassicsPatch_GetGlobalFunctionsFromModule(ClassicsPatchGlobalFunctions *pFunctions) {
+  HMODULE hCore = GetModuleHandleA("ClassicsCore.dll");
+
+  if (hCore != NULL) {
+    pFunctions->_VerifyInternal = (ClassicsPatchGlobalFunctions::FVerifyInternal)GetProcAddress(hCore, "ClassicsPatchAPI_VerifyInternal");
+    pFunctions->_IsRunning      = (ClassicsPatchGlobalFunctions::FIsRunning)GetProcAddress(hCore, "ClassicsPatchAPI_IsRunning");
+    pFunctions->_Setup          = (ClassicsPatchGlobalFunctions::FSetup)GetProcAddress(hCore, "ClassicsPatch_Setup");
+    pFunctions->_Init           = (ClassicsPatchGlobalFunctions::FInit)GetProcAddress(hCore, "ClassicsPatch_Init");
+    pFunctions->_Shutdown       = (ClassicsPatchGlobalFunctions::FShutdown)GetProcAddress(hCore, "ClassicsPatch_Shutdown");
+
+    return true;
+  }
+
+  return false;
+};
+
 #endif // CLASSICSPATCH_API_H
