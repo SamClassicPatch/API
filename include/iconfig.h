@@ -23,6 +23,7 @@ enum EConfigProps
   k_EConfigProps_DebugPatcher       = 21, // [bool]
   k_EConfigProps_DPIAware           = 22, // [bool]
   k_EConfigProps_ExtendedFileSystem = 23, // [bool]
+  k_EConfigProps_ExtendedInput      = 26, // [bool]
   k_EConfigProps_FullAppIntegration = 24, // [bool]
   k_EConfigProps_NotifyAboutUpdates = 25, // [bool]
 
