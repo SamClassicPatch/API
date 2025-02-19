@@ -45,17 +45,22 @@ enum EClassicsPatchAppType
   k_EClassicsPatchAppType_Server  = 2, // Dedicated Server
   k_EClassicsPatchAppType_Editor  = 3, // Serious Editor
   k_EClassicsPatchAppType_Modeler = 4, // Serious Modeler or Serious SKA Studio
+
+  k_EClassicsPatchAppType_Max,
 };
 
 // Current seasonal events
 // These types may be used to perform specific actions depending on the current event
 enum EClassicsPatchSeason
 {
-  k_EClassicsPatchSeason_None      = 0,
-  k_EClassicsPatchSeason_Valentine = 1, // Feb 10 - Feb 18
-  k_EClassicsPatchSeason_Birthday  = 2, // Mar 19 - Mar 23 (Sam); Jun 20 - Jun 24 (Classics Patch)
-  k_EClassicsPatchSeason_Halloween = 3, // Oct 01 - Oct 31
-  k_EClassicsPatchSeason_Christmas = 4, // Dec 15 - Jan 15
+  k_EClassicsPatchSeason_None        = 0,
+  k_EClassicsPatchSeason_Valentine   = 1, // Feb 10 - Feb 18
+  k_EClassicsPatchSeason_Birthday    = 2, // Mar 19 - Mar 23 (Serious Sam)
+  k_EClassicsPatchSeason_Halloween   = 3, // Oct 01 - Oct 31
+  k_EClassicsPatchSeason_Christmas   = 4, // Dec 15 - Jan 15
+  k_EClassicsPatchSeason_Anniversary = 5, // Jun 20 - Jun 24 (Classics Patch)
+
+  k_EClassicsPatchSeason_Max,
 };
 
 // Classics Patch version number
