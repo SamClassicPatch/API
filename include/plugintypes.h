@@ -25,7 +25,7 @@ enum EPluginFlags {
 
 const int k_cchMaxPluginInfoString = 256;
 
-// Information about the plugin set by the plugin
+// Information about the plugin set by the plugin (but never instantiated by it!)
 struct PluginInfo_t {
   ULONG m_ulAPI; // API version the plugin utilizes
   ULONG m_ulFlags; // Utility flags from EPluginFlags
@@ -36,11 +36,9 @@ struct PluginInfo_t {
   char m_strName[k_cchMaxPluginInfoString]; // Plugin display name
   char m_strDescription[k_cchMaxPluginInfoString]; // Brief description of the plugin
 
-  PluginInfo_t()
-  {
-    m_ulFlags = k_EPluginFlagManual;
-    SetMetadata(0, "Unknown", "No name", "None");
-  };
+  // Unique internal name for a "patch extension" that can be used to get access to this plugin from external sources
+  // in order to utilize its functionality. Otherwise NULL for regular plugins that wish to do their own thing in peace.
+  const char *m_strExtensionIdentifier;
 
   inline void SetMetadata(ULONG ulVersion, const char *strAuthor, const char *strName, const char *strDescription)
   {

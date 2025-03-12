@@ -55,6 +55,18 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
     pOutInfo->SetMetadata(version, author, name, description); \
   };
 
+// Define extension data for Classics Patch
+// Example usage:
+//    CLASSICSPATCH_DEFINE_EXTENSION("PATCH_EXT_fundomizer", k_EPluginFlagGame | k_EPluginFlagServer, MakeVersion(1, 0, 0),
+//      "SAM_IS_AWESOME", "Fundomizer", "Cool plugin for randomizing various gameplay aspects. Works on dedicated servers too!");
+#define CLASSICSPATCH_DEFINE_EXTENSION(extension, utility, version, author, name, description) \
+  MODULE_API void PLUGINMODULEMETHOD_GETINFO(PluginInfo_t *pOutInfo) { \
+    pOutInfo->m_ulAPI = CLASSICSPATCH_INTERFACE_VERSION; \
+    pOutInfo->m_ulFlags = utility; \
+    pOutInfo->SetMetadata(version, author, name, description); \
+    pOutInfo->m_strExtensionIdentifier = extension; \
+  };
+
 // Define plugin startup method
 // Example usage:
 //    CLASSICSPATCH_PLUGIN_STARTUP(CIniConfig &props, PluginEvents_t &events) {
