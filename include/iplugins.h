@@ -39,17 +39,33 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 // MODULE_API defines linkage and calling conventions for exported plugin methods
 #define MODULE_API extern "C" __declspec(dllexport)
 
+// Plugin method prototypes
+#define PLUGINMODULEPROTOTYPE_GETINFO(identifier)  void identifier (PluginInfo_t *pOutInfo)
+#define PLUGINMODULEPROTOTYPE_STARTUP(identifier)  void identifier (class CIniConfig &props, PluginEvents_t &events)
+#define PLUGINMODULEPROTOTYPE_SHUTDOWN(identifier) void identifier (class CIniConfig &props)
+
 // Plugin method identifiers
 #define PLUGINMODULEMETHOD_GETINFO  ClassicsPatchPlugin_GetInfo
 #define PLUGINMODULEMETHOD_STARTUP  ClassicsPatchPlugin_Startup
 #define PLUGINMODULEMETHOD_SHUTDOWN ClassicsPatchPlugin_Shutdown
+
+// Plugin method pointers
+#define PLUGINMODULEPOINTER_GETINFO  __pClassicsPatchPlugin_GetInfo_Func__
+#define PLUGINMODULEPOINTER_STARTUP  __pClassicsPatchPlugin_Startup_Func__
+#define PLUGINMODULEPOINTER_SHUTDOWN __pClassicsPatchPlugin_Shutdown_Func__
+
+// Intermediate macro for defining a specific plugin method and exporting a pointer to it (don't use)
+#define PLUGINMODULE_DEFINEMETHOD(returntype, method) \
+  static PLUGINMODULEPROTOTYPE_##method(PLUGINMODULEMETHOD_##method); \
+  MODULE_API PLUGINMODULEPROTOTYPE_##method((*PLUGINMODULEPOINTER_##method)) = &PLUGINMODULEMETHOD_##method; \
+  returntype PLUGINMODULEMETHOD_##method
 
 // Define plugin data for Classics Patch
 // Example usage:
 //    CLASSICSPATCH_DEFINE_PLUGIN(k_EPluginFlagGame | k_EPluginFlagServer, MakeVersion(1, 0, 0),
 //      "SAM_IS_AWESOME", "Fundomizer", "Cool plugin for randomizing various gameplay aspects. Works on dedicated servers too!");
 #define CLASSICSPATCH_DEFINE_PLUGIN(utility, version, author, name, description) \
-  MODULE_API void PLUGINMODULEMETHOD_GETINFO(PluginInfo_t *pOutInfo) { \
+  PLUGINMODULE_DEFINEMETHOD(void, GETINFO) (PluginInfo_t *pOutInfo) { \
     pOutInfo->m_ulAPI = CLASSICSPATCH_INTERFACE_VERSION; \
     pOutInfo->m_ulFlags = utility; \
     pOutInfo->SetMetadata(version, author, name, description); \
@@ -60,7 +76,7 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 //    CLASSICSPATCH_DEFINE_EXTENSION("PATCH_EXT_fundomizer", k_EPluginFlagGame | k_EPluginFlagServer, MakeVersion(1, 0, 0),
 //      "SAM_IS_AWESOME", "Fundomizer", "Cool plugin for randomizing various gameplay aspects. Works on dedicated servers too!");
 #define CLASSICSPATCH_DEFINE_EXTENSION(extension, utility, version, author, name, description) \
-  MODULE_API void PLUGINMODULEMETHOD_GETINFO(PluginInfo_t *pOutInfo) { \
+  PLUGINMODULE_DEFINEMETHOD(void, GETINFO) (PluginInfo_t *pOutInfo) { \
     pOutInfo->m_ulAPI = CLASSICSPATCH_INTERFACE_VERSION; \
     pOutInfo->m_ulFlags = utility; \
     pOutInfo->SetMetadata(version, author, name, description); \
@@ -72,13 +88,13 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 //    CLASSICSPATCH_PLUGIN_STARTUP(CIniConfig &props, PluginEvents_t &events) {
 //      ...startup code and optional interaction with plugin properties...
 //    };
-#define CLASSICSPATCH_PLUGIN_STARTUP MODULE_API void PLUGINMODULEMETHOD_STARTUP
+#define CLASSICSPATCH_PLUGIN_STARTUP PLUGINMODULE_DEFINEMETHOD(void, STARTUP)
 
 // Define plugin shutdown method
 // Example usage:
 //    CLASSICSPATCH_PLUGIN_SHUTDOWN(CIniConfig &props) {
 //      ...shutdown code and optional interaction with plugin properties...
 //    };
-#define CLASSICSPATCH_PLUGIN_SHUTDOWN MODULE_API void PLUGINMODULEMETHOD_SHUTDOWN
+#define CLASSICSPATCH_PLUGIN_SHUTDOWN PLUGINMODULE_DEFINEMETHOD(void, SHUTDOWN)
 
 #endif // CLASSICSPATCH_IPLUGINS_H
