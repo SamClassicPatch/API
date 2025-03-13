@@ -98,4 +98,7 @@ struct PluginSymbol_t
   };
 };
 
+// Opaque handle type for referencing specific plugins
+typedef struct PluginInstance_t *HPatchPlugin;
+
 #endif // CLASSICSPATCH_PLUGINTYPES_H
