@@ -4,7 +4,7 @@ This is a collection of headers that act as a public frontend for [Serious Sam C
 
 If you need to develop a plugin for the patch or any external module that interacts with the patch in any way, you have to use this API.
 
-Every time a new Classics Patch update is released, `lib/classicscore.lib` is updated to match the [latest release](https://github.com/SamClassicPatch/SuperProject/releases).
+Every time the API receives a significant update, its version in the `CLASSICSPATCH_INTERFACE_VERSION` macro is increased and the `lib/classicscore.lib` static library is updated to match the [latest release](https://github.com/SamClassicPatch/SuperProject/releases).
 
 > [!IMPORTANT]
 > The static library is always based on `ClassicsCore.dll` for **The Second Encounter v1.07** (`Release_TSE107` configuration) due to being the most full-fledged version. This means that not all API functionality might be available depending on the build configuration. Though, every single API function is still implemented properly for all official builds to prevent linking errors. Keep that in mind when linking against third-party builds.
