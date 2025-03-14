@@ -98,9 +98,9 @@ public:
   virtual ~IClassicsExtPacket() {};
 
   // Macro for defining packets of a specific type
-  #define EXTPACKET_DEFINEFORTYPE(_Type) \
-    virtual EPacketType GetType(void) const { return _Type; }; \
-    virtual const char *GetName(void) const { return #_Type; };
+  #define EXTPACKET_DEFINEFORTYPE(type) \
+    virtual EPacketType GetType(void) const { return type; }; \
+    virtual const char *GetName(void) const { return #type; };
 
   // Get unique extension packet index
   virtual EPacketType GetType(void) const = 0;

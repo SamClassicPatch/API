@@ -53,6 +53,11 @@ PATCH_API void PATCH_CALLTYPE FuncPatch_ForceRewrite(int nBytes);
 // pReplaceWithJumpOpcode - pointer to some opcode, e.g. beginning of some function
 // iJumpDestinationAddress - opcode address to jump to, e.g. beginning of a different function
 // strIdentifier - unique identifier that also acts as a display name
+//
+// If this function is used inside plugin's startup method (defined using CLASSICSPATCH_PLUGIN_STARTUP),
+// the created function patch is automatically added to the patch registry of that plugin, which is used
+// to automatically destroy all function patches upon plugin cleanup. You should not call DestroyPatch()
+// manually for each patch in CLASSICSPATCH_PLUGIN_SHUTDOWN that was created during plugin initialization.
 PATCH_API HFuncPatch PATCH_CALLTYPE CreateOpcodePatch(void *pOpcodeToReplace, long iJumpDestinationAddress, const char *strIdentifier);
 
 // Wrapper function that takes two functions instead of addresses

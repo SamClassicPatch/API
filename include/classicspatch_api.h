@@ -15,6 +15,7 @@
 #include "ichat.h"
 #include "iconfig.h"
 #include "icore.h"
+#include "iextensions.h"
 #include "igame.h"
 #include "imoddata.h"
 #include "iplugins.h"
@@ -28,7 +29,7 @@
 
 // Current version of Classics Patch API
 // a.k.a. the version used by the external module
-#define CLASSICSPATCH_INTERFACE_VERSION 001
+#define CLASSICSPATCH_INTERFACE_VERSION 002
 
 enum EVerifyAPIResult
 {
@@ -97,6 +98,7 @@ public:
   virtual IClassicsPlugins *Plugins(void) = 0;
   virtual IClassicsFuncPatches *FuncPatches(void) = 0;
   virtual IClassicsPackets *Packets(void) = 0;
+  virtual IClassicsExtensions *Extensions(void) = 0;
 };
 
 // Retrieve pointer to the main virtual interface

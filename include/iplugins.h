@@ -18,17 +18,6 @@ public:
 
   // Register a plugin method in the shell or replace an existing one
   virtual void RegisterMethod(bool bUser, const char *strReturnType, const char *strFunctionName, const char *strArgumentTypes, void *pFunction) = 0;
-
-  // Get current amount of available extensions
-  virtual int GetExtensionCount(void) = 0;
-
-  // Retrieve a specific extension by its index in the array (from 0 to GetExtensionCount() - 1)
-  // The array order is never guaranteed to be the same at all times, so different calls to this function with the same index
-  // may return handles to different plugins. It's recommended to use a more reliable GetExtensionByName() method instead.
-  virtual HPatchPlugin *GetExtensionByIndex(int iExtension) = 0;
-
-  // Retrieve a specific extension by its identifier
-  virtual HPatchPlugin *GetExtensionByName(const char *strExtension) = 0;
 };
 
 // Get pointer to the plugin interface
