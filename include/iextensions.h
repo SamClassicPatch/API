@@ -301,6 +301,12 @@ struct ExtensionSignal_t
 // Try to find the handler of some extension signal; returns NULL if not found
 PATCH_API FExtensionSignal PATCH_CALLTYPE ClassicsExtensions_FindSignal(HPatchPlugin hPlugin, const char *strSignal);
 
+// Try to call some extension signal
+// Returns false if the signal cannot be called (not found)
+// piResult - pointer to the variable that will hold the result from the function call (may be NULL)
+// pData - optional data that will be passed into the signal call (see FExtensionSignal prototype)
+PATCH_API bool PATCH_CALLTYPE ClassicsExtensions_CallSignal(HPatchPlugin hPlugin, const char *strSignal, int *piResult, void *pData);
+
 //================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
@@ -330,6 +336,7 @@ public:
   virtual bool SetData(HPatchPlugin hPlugin, const char *strProperty, void *pValue) { return ClassicsExtensions_SetData(hPlugin, strProperty, pValue); };
 
   virtual FExtensionSignal FindSignal(HPatchPlugin hPlugin, const char *strSignal) { return ClassicsExtensions_FindSignal(hPlugin, strSignal); };
+  virtual bool CallSignal(HPatchPlugin hPlugin, const char *strSignal, int *piResult, void *pData) { return ClassicsExtensions_CallSignal(hPlugin, strSignal, piResult, pData); };
 };
 
 #endif // CLASSICSPATCH_IEXTENSIONS_H
