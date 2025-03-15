@@ -198,7 +198,7 @@ struct ExtensionPropRef_t {
   bool GetValue(Type *pValue)
   {
     // If there's a property to look up
-    if (m_strProperty != NULL) {
+    if (m_hExtension != NULL && m_strProperty != NULL) {
       // Look it up and then reset it
       ExtensionProp_t *pProp = ClassicsExtensions_FindPropertyOfType(m_hExtension, m_strProperty, m_ePropType);
       m_strProperty = NULL;
@@ -223,7 +223,7 @@ struct ExtensionPropRef_t {
   bool SetValue(Type value)
   {
     // If there's a property to look up
-    if (m_strProperty != NULL) {
+    if (m_hExtension != NULL && m_strProperty != NULL) {
       // Look it up and then reset it
       ExtensionProp_t *pProp = ClassicsExtensions_FindProperty(m_hExtension, m_strProperty);
       m_strProperty = NULL;
@@ -274,6 +274,33 @@ inline void ExtensionPropRef_t<void *>::SetupReference(HPatchPlugin hExtension, 
   m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_Data; m_pValue = NULL;
 };
 
+// Function handler of an extension signal
+// Input data and output value are completely optional and depend on the function implementation
+typedef int (*FExtensionSignal)(void *pOptionalData);
+
+// One extension signal in the array
+struct ExtensionSignal_t
+{
+  const char *m_strSignal;
+  FExtensionSignal m_pHandler;
+};
+
+// Extension signals symbols
+#define EXTENSIONMODULE_SIGNALARRAY  ClassicsPatchExtension_SignalArray
+#define EXTENSIONMODULE_SIGNALCOUNT  ClassicsPatchExtension_SignalCount
+
+// Define array of extension signals
+// Example usage:
+//    CLASSICSPATCH_EXTENSION_SIGNALS_BEGIN {
+//      { "my_signal_a", &SignalFunc1 },
+//      { "my_signal_b", &SignalFunc2 },
+//    } CLASSICSPATCH_EXTENSION_SIGNALS_END;
+#define CLASSICSPATCH_EXTENSION_SIGNALS_BEGIN MODULE_API ExtensionSignal_t EXTENSIONMODULE_SIGNALARRAY[] =
+#define CLASSICSPATCH_EXTENSION_SIGNALS_END ; MODULE_API const size_t EXTENSIONMODULE_SIGNALCOUNT = ARRAYCOUNT(EXTENSIONMODULE_SIGNALARRAY)
+
+// Try to find the handler of some extension signal; returns NULL if not found
+PATCH_API FExtensionSignal PATCH_CALLTYPE ClassicsExtensions_FindSignal(HPatchPlugin hPlugin, const char *strSignal);
+
 //================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
@@ -301,6 +328,8 @@ public:
   virtual bool SetDouble(HPatchPlugin hPlugin, const char *strProperty, double fValue) { return ClassicsExtensions_SetDouble(hPlugin, strProperty, fValue); };
   virtual bool SetString(HPatchPlugin hPlugin, const char *strProperty, const char *strValue) { return ClassicsExtensions_SetString(hPlugin, strProperty, strValue); };
   virtual bool SetData(HPatchPlugin hPlugin, const char *strProperty, void *pValue) { return ClassicsExtensions_SetData(hPlugin, strProperty, pValue); };
+
+  virtual FExtensionSignal FindSignal(HPatchPlugin hPlugin, const char *strSignal) { return ClassicsExtensions_FindSignal(hPlugin, strSignal); };
 };
 
 #endif // CLASSICSPATCH_IEXTENSIONS_H
