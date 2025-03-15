@@ -99,6 +99,7 @@ public:
   virtual IClassicsFuncPatches *FuncPatches(void) = 0;
   virtual IClassicsPackets *Packets(void) = 0;
   virtual IClassicsExtensions *Extensions(void) = 0;
+  virtual IClassicsINI *INI(void) = 0;
 };
 
 // Retrieve pointer to the main virtual interface

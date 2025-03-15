@@ -40,7 +40,7 @@ class CWorld;
 // and specify events is through plugin initialization!
 //
 // Example usage:
-//    CLASSICSPATCH_PLUGIN_STARTUP(CIniConfig &props, PluginEvents_t &events) {
+//    CLASSICSPATCH_PLUGIN_STARTUP(HIniConfig props, PluginEvents_t &events) {
 //      // Register plugin functions that need to be called
 //      events.m_processing->OnStep = &PluginOnStep;
 //      events.m_world->OnWorldLoad = &PluginOnWorldLoad;

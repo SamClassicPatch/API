@@ -7,6 +7,7 @@
 #endif
 
 #include "classicspatch_common.h"
+#include "iconfig.h"
 #include "pluginevents.h"
 #include "plugintypes.h"
 
@@ -41,8 +42,8 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 
 // Plugin method prototypes
 #define PLUGINMODULEPROTOTYPE_GETINFO(identifier)  void identifier (PluginInfo_t *pOutInfo)
-#define PLUGINMODULEPROTOTYPE_STARTUP(identifier)  void identifier (class CIniConfig &props, PluginEvents_t &events)
-#define PLUGINMODULEPROTOTYPE_SHUTDOWN(identifier) void identifier (class CIniConfig &props)
+#define PLUGINMODULEPROTOTYPE_STARTUP(identifier)  void identifier (HIniConfig props, PluginEvents_t &events)
+#define PLUGINMODULEPROTOTYPE_SHUTDOWN(identifier) void identifier (HIniConfig props)
 
 // Plugin method identifiers
 #define PLUGINMODULEMETHOD_GETINFO  ClassicsPatchPlugin_GetInfo
@@ -73,14 +74,14 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 
 // Define plugin startup method
 // Example usage:
-//    CLASSICSPATCH_PLUGIN_STARTUP(CIniConfig &props, PluginEvents_t &events) {
+//    CLASSICSPATCH_PLUGIN_STARTUP(HIniConfig props, PluginEvents_t &events) {
 //      ...startup code and optional interaction with plugin properties...
 //    };
 #define CLASSICSPATCH_PLUGIN_STARTUP PLUGINMODULE_DEFINEMETHOD(void, STARTUP)
 
 // Define plugin shutdown method
 // Example usage:
-//    CLASSICSPATCH_PLUGIN_SHUTDOWN(CIniConfig &props) {
+//    CLASSICSPATCH_PLUGIN_SHUTDOWN(HIniConfig props) {
 //      ...shutdown code and optional interaction with plugin properties...
 //    };
 #define CLASSICSPATCH_PLUGIN_SHUTDOWN PLUGINMODULE_DEFINEMETHOD(void, SHUTDOWN)

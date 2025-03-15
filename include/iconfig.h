@@ -8,6 +8,62 @@
 
 #include "classicspatch_common.h"
 
+// Opaque handle to an INI config
+typedef class CIniConfig *HIniConfig;
+
+// Create a new INI config
+PATCH_API HIniConfig PATCH_CALLTYPE ClassicsINI_Create(void);
+
+// Destroy previously created INI config
+PATCH_API void PATCH_CALLTYPE ClassicsINI_Destroy(HIniConfig hINI);
+
+// Clear the INI config
+PATCH_API void PATCH_CALLTYPE ClassicsINI_Clear(HIniConfig hINI);
+
+// Check if INI config is empty
+PATCH_API bool PATCH_CALLTYPE ClassicsINI_IsEmpty(HIniConfig hINI);
+
+// Check if some section exists
+PATCH_API bool PATCH_CALLTYPE ClassicsINI_SectionExists(HIniConfig hINI, const char *strSection);
+
+// Check if some key exists under some section
+PATCH_API bool PATCH_CALLTYPE ClassicsINI_KeyExists(HIniConfig hINI, const char *strSection, const char *strKey);
+
+// Delete key under some section or the entire section (if strKey is NULL)
+PATCH_API bool PATCH_CALLTYPE ClassicsINI_Delete(HIniConfig hINI, const char *strSection, const char *strKey = NULL);
+
+// Set value to a key under some section
+PATCH_API void PATCH_CALLTYPE ClassicsINI_SetValue(HIniConfig hINI, const char *strSection, const char *strKey, const char *strValue);
+
+// Set boolean value under a key under some section
+PATCH_API void PATCH_CALLTYPE ClassicsINI_SetBoolValue(HIniConfig hINI, const char *strSection, const char *strKey, bool bValue);
+
+// Set integer value under a key under some section
+PATCH_API void PATCH_CALLTYPE ClassicsINI_SetIntValue(HIniConfig hINI, const char *strSection, const char *strKey, int iValue);
+
+// Set float value under a key under some section
+PATCH_API void PATCH_CALLTYPE ClassicsINI_SetDoubleValue(HIniConfig hINI, const char *strSection, const char *strKey, double dValue);
+
+// Get value under a key or return a default value, if key or section doesn't exist
+// The returned string is always temporary and should always be copied into a separate buffer for storage
+PATCH_API const char *PATCH_CALLTYPE ClassicsINI_GetValue(HIniConfig hINI, const char *strSection, const char *strKey, const char *strDefValue);
+
+// Get boolean value under a key or return a default value, if key or section doesn't exist
+PATCH_API bool PATCH_CALLTYPE ClassicsINI_GetBoolValue(HIniConfig hINI, const char *strSection, const char *strKey, bool bDefValue);
+
+// Get integer value under a key or return a default value, if key or section doesn't exist
+PATCH_API int PATCH_CALLTYPE ClassicsINI_GetIntValue(HIniConfig hINI, const char *strSection, const char *strKey, int iDefValue);
+
+// Get float value under a key or return a default value, if key or section doesn't exist
+PATCH_API double PATCH_CALLTYPE ClassicsINI_GetDoubleValue(HIniConfig hINI, const char *strSection, const char *strKey, double dDefValue);
+
+// Read INI config from a string
+PATCH_API void PATCH_CALLTYPE ClassicsINI_Read(HIniConfig hINI, const char *str);
+
+// Write INI config into a string
+// The returned string is always temporary and should always be copied into a separate buffer for storage
+PATCH_API const char *PATCH_CALLTYPE ClassicsINI_Write(HIniConfig hINI);
+
 enum EConfigProps
 {
   // Mounting properties
@@ -79,6 +135,32 @@ PATCH_API const char *PATCH_CALLTYPE ClassicsGameplayExt_GetString(EGameplayExt 
 //================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
+
+class IClassicsINI
+{
+public:
+  virtual HIniConfig Create(void) { return ClassicsINI_Create(); };
+  virtual void Destroy(HIniConfig hINI) { ClassicsINI_Destroy(hINI); };
+
+  virtual void Clear(HIniConfig hINI) { ClassicsINI_Clear(hINI); };
+  virtual bool IsEmpty(HIniConfig hINI) { return ClassicsINI_IsEmpty(hINI); };
+  virtual bool SectionExists(HIniConfig hINI, const char *strSection) { return ClassicsINI_SectionExists(hINI, strSection); };
+  virtual bool KeyExists(HIniConfig hINI, const char *strSection, const char *strKey) { return ClassicsINI_KeyExists(hINI, strSection, strKey); };
+  virtual bool Delete(HIniConfig hINI, const char *strSection, const char *strKey = NULL) { return ClassicsINI_Delete(hINI, strSection, strKey); };
+
+  virtual void SetValue(HIniConfig hINI, const char *strSection, const char *strKey, const char *strValue) { ClassicsINI_SetValue(hINI, strSection, strKey, strValue); };
+  virtual void SetBoolValue(HIniConfig hINI, const char *strSection, const char *strKey, bool bValue) { ClassicsINI_SetBoolValue(hINI, strSection, strKey, bValue); };
+  virtual void SetIntValue(HIniConfig hINI, const char *strSection, const char *strKey, int iValue) { ClassicsINI_SetIntValue(hINI, strSection, strKey, iValue); };
+  virtual void SetDoubleValue(HIniConfig hINI, const char *strSection, const char *strKey, double dValue) { ClassicsINI_SetDoubleValue(hINI, strSection, strKey, dValue); };
+
+  virtual const char *GetValue(HIniConfig hINI, const char *strSection, const char *strKey, const char *strDefValue) { return ClassicsINI_GetValue(hINI, strSection, strKey, strDefValue); };
+  virtual bool GetBoolValue(HIniConfig hINI, const char *strSection, const char *strKey, bool bDefValue) { return ClassicsINI_GetBoolValue(hINI, strSection, strKey, bDefValue); };
+  virtual int GetIntValue(HIniConfig hINI, const char *strSection, const char *strKey, int iDefValue) { return ClassicsINI_GetIntValue(hINI, strSection, strKey, iDefValue); };
+  virtual double GetDoubleValue(HIniConfig hINI, const char *strSection, const char *strKey, double dDefValue) { return ClassicsINI_GetDoubleValue(hINI, strSection, strKey, dDefValue); };
+
+  virtual void Read(HIniConfig hINI, const char *str) { ClassicsINI_Read(hINI, str); };
+  virtual const char *Write(HIniConfig hINI) { return ClassicsINI_Write(hINI); };
+};
 
 class IClassicsConfig
 {
