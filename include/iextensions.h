@@ -154,6 +154,126 @@ PATCH_API bool PATCH_CALLTYPE ClassicsExtensions_SetString(HPatchPlugin hPlugin,
 // Returns false if the property for this value type cannot be found
 PATCH_API bool PATCH_CALLTYPE ClassicsExtensions_SetData(HPatchPlugin hPlugin, const char *strProperty, void *pValue);
 
+// Convenient structure for referring to specific values in extension properties
+// Template argument must be one of the class types supported by ExtensionProp_t
+//
+// When getting & setting values, it searches for the desired property only once on the initial call
+// and then reuses the value from the found property with subsequent calls.
+template<class Type>
+struct ExtensionPropRef_t {
+  // Handle to the extension that should contain this property
+  HPatchPlugin m_hExtension;
+
+  // Name of a property that needs to be looked up
+  //
+  // When not NULL, it is used to find a property with that name, the value of which is saved into m_pValue.
+  // After that, it's reset to NULL to prevent further lookups. It can be set to another name again later
+  // in order to search for another property the next time a new value is needed.
+  const char *m_strProperty;
+  ExtensionProp_t::EType m_ePropType;
+
+  // Referenced value of some property
+  // Causes undefined behavior when NULL, which is the result of not being able to find the property
+  Type *m_pValue;
+
+  // Default constructor for later setup via SetupReference()
+  ExtensionPropRef_t() : m_hExtension(NULL), m_strProperty(NULL), m_pValue(NULL) {};
+
+  // Constructor that prepares a property inside some extension
+  inline ExtensionPropRef_t(HPatchPlugin hExtension, const char *strProperty) {
+    SetupReference(hExtension, strProperty);
+  };
+
+  // Constructor that prepares a property inside some extension
+  // m_hExtension handle is found by searching for an extension with the matching identifier
+  inline ExtensionPropRef_t(const char *strExtension, const char *strProperty) {
+    SetupReference(ClassicsExtensions_GetExtensionByName(strExtension), strProperty);
+  };
+
+  // Setup this reference to look up a specific property in a specific extension next time
+  void SetupReference(HPatchPlugin hExtension, const char *strProperty);
+
+  // Try to look up the desired property and retrieve its value
+  // Returns false if the value cannot be retrieved (no property found)
+  bool GetValue(Type *pValue)
+  {
+    // If there's a property to look up
+    if (m_strProperty != NULL) {
+      // Look it up and then reset it
+      ExtensionProp_t *pProp = ClassicsExtensions_FindPropertyOfType(m_hExtension, m_strProperty, m_ePropType);
+      m_strProperty = NULL;
+
+      // Retrieve its value, if it exists
+      if (pProp != NULL) m_pValue = (Type *)&pProp->m_value;
+    }
+
+    // See if the value has been retrieved
+    if (m_pValue != NULL) {
+      // And return it
+      *pValue = *m_pValue;
+      return true;
+    }
+
+    // Otherwise no value
+    return false;
+  };
+
+  // Try to look up the desired property and set a value to it
+  // Returns false if the value cannot be set (no property found)
+  bool SetValue(Type value)
+  {
+    // If there's a property to look up
+    if (m_strProperty != NULL) {
+      // Look it up and then reset it
+      ExtensionProp_t *pProp = ClassicsExtensions_FindProperty(m_hExtension, m_strProperty);
+      m_strProperty = NULL;
+
+      // Retrieve its value, if it exists
+      if (pProp != NULL) m_pValue = (Type *)&pProp->m_value;
+    }
+
+    // See if the value has been retrieved
+    if (m_pValue != NULL) {
+      // And set it
+      *m_pValue = value;
+      return true;
+    }
+
+    // Otherwise no value
+    return false;
+  };
+};
+
+// Setup for boolean properties
+inline void ExtensionPropRef_t<bool>::SetupReference(HPatchPlugin hExtension, const char *strProperty) {
+  m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_Bool; m_pValue = NULL;
+};
+
+// Setup for integer properties
+inline void ExtensionPropRef_t<int>::SetupReference(HPatchPlugin hExtension, const char *strProperty) {
+  m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_Int; m_pValue = NULL;
+};
+
+// Setup for float properties
+inline void ExtensionPropRef_t<float>::SetupReference(HPatchPlugin hExtension, const char *strProperty) {
+  m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_Float; m_pValue = NULL;
+};
+
+// Setup for double properties
+inline void ExtensionPropRef_t<double>::SetupReference(HPatchPlugin hExtension, const char *strProperty) {
+  m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_Double; m_pValue = NULL;
+};
+
+// Setup for string properties
+inline void ExtensionPropRef_t<const char *>::SetupReference(HPatchPlugin hExtension, const char *strProperty) {
+  m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_String; m_pValue = NULL;
+};
+
+// Setup for data properties
+inline void ExtensionPropRef_t<void *>::SetupReference(HPatchPlugin hExtension, const char *strProperty) {
+  m_hExtension = hExtension; m_strProperty = strProperty; m_ePropType = ExtensionProp_t::k_EType_Data; m_pValue = NULL;
+};
+
 //================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
