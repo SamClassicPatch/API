@@ -7,37 +7,12 @@
 #endif
 
 #include "classicspatch_common.h"
+#include "extensiontypes.h"
 #include "iplugins.h"
 
 // Opaque handle type for referencing specific extensions
+// Equal to the class from the Core library
 typedef class CPluginModule *HPatchPlugin;
-
-// Define extension data for Classics Patch
-// Example usage:
-//    CLASSICSPATCH_DEFINE_EXTENSION("PATCH_EXT_fundomizer", k_EPluginFlagGame | k_EPluginFlagServer, MakeVersion(1, 0, 0),
-//      "SAM_IS_AWESOME", "Fundomizer", "Cool plugin for randomizing various gameplay aspects. Works on dedicated servers too!");
-#define CLASSICSPATCH_DEFINE_EXTENSION(extension, utility, version, author, name, description) \
-  PLUGINMODULE_DEFINEMETHOD(void, GETINFO) (PluginInfo_t *pOutInfo) { \
-    pOutInfo->m_ulAPI = CLASSICSPATCH_INTERFACE_VERSION; \
-    pOutInfo->m_ulFlags = utility; \
-    pOutInfo->SetMetadata(version, author, name, description); \
-    pOutInfo->m_strExtensionIdentifier = extension; \
-  };
-
-// Extension handle symbol for easy access to the extension from within itself
-// Example usage:
-//    extern HPatchPlugin EXTENSIONMODULE_LOCALHANDLE;
-//    ClassicsExtensions_GetInt(EXTENSIONMODULE_LOCALHANDLE, "my_int", &iValue);
-#define EXTENSIONMODULE_LOCALHANDLE ClassicsPatchExtension_LocalPluginHandle
-
-// Define a local handle to this extension
-// Example usage:
-//    // In global scope
-//    CLASSICSPATCH_DEFINE_EXTENSION_HANDLE;
-//    // In some function
-//    ClassicsExtensions_SetInt(EXTENSIONMODULE_LOCALHANDLE, "my_int", 0);
-#define CLASSICSPATCH_DEFINE_EXTENSION_HANDLE \
-  MODULE_API HPatchPlugin EXTENSIONMODULE_LOCALHANDLE = NULL
 
 // Get current amount of available extensions
 PATCH_API int PATCH_CALLTYPE ClassicsExtensions_GetExtensionCount(void);
@@ -81,21 +56,6 @@ struct ExtensionProp_t
   ExtensionProp_t(const char *str, const char *sValue) : m_strProperty(str), m_eType(k_EType_String) { m_value._string = sValue; };
   ExtensionProp_t(const char *str, void       *pValue) : m_strProperty(str), m_eType(k_EType_Data)   { m_value._data   = pValue; };
 };
-
-// Extension properties symbols
-#define EXTENSIONMODULE_PROPSARRAY  ClassicsPatchExtension_PropsArray
-#define EXTENSIONMODULE_PROPSCOUNT  ClassicsPatchExtension_PropsCount
-
-// Define array of extension properties
-// Example usage:
-//    CLASSICSPATCH_EXTENSION_PROPS_BEGIN {
-//      ExtensionProp_t( "my_bool_property", true ),
-//      ExtensionProp_t( "my_int_property", -1 ),
-//      ExtensionProp_t( "my_float_property", 0.0f ),
-//      ExtensionProp_t( "my_string_property", "Hello, world!" ),
-//    } CLASSICSPATCH_EXTENSION_PROPS_END;
-#define CLASSICSPATCH_EXTENSION_PROPS_BEGIN MODULE_API ExtensionProp_t EXTENSIONMODULE_PROPSARRAY[] =
-#define CLASSICSPATCH_EXTENSION_PROPS_END ; MODULE_API const size_t EXTENSIONMODULE_PROPSCOUNT = ARRAYCOUNT(EXTENSIONMODULE_PROPSARRAY)
 
 // Try to find some extension property; returns NULL if not found
 PATCH_API ExtensionProp_t *PATCH_CALLTYPE ClassicsExtensions_FindProperty(HPatchPlugin hPlugin, const char *strProperty);
@@ -281,22 +241,9 @@ typedef int (*FExtensionSignal)(void *pOptionalData);
 // One extension signal in the array
 struct ExtensionSignal_t
 {
-  const char *m_strSignal;
-  FExtensionSignal m_pHandler;
+  const char *m_strSignal; // Unique signal name
+  FExtensionSignal m_pHandler; // Handler that is retrieved by the signal name
 };
-
-// Extension signals symbols
-#define EXTENSIONMODULE_SIGNALARRAY  ClassicsPatchExtension_SignalArray
-#define EXTENSIONMODULE_SIGNALCOUNT  ClassicsPatchExtension_SignalCount
-
-// Define array of extension signals
-// Example usage:
-//    CLASSICSPATCH_EXTENSION_SIGNALS_BEGIN {
-//      { "my_signal_a", &SignalFunc1 },
-//      { "my_signal_b", &SignalFunc2 },
-//    } CLASSICSPATCH_EXTENSION_SIGNALS_END;
-#define CLASSICSPATCH_EXTENSION_SIGNALS_BEGIN MODULE_API ExtensionSignal_t EXTENSIONMODULE_SIGNALARRAY[] =
-#define CLASSICSPATCH_EXTENSION_SIGNALS_END ; MODULE_API const size_t EXTENSIONMODULE_SIGNALCOUNT = ARRAYCOUNT(EXTENSIONMODULE_SIGNALARRAY)
 
 // Try to find the handler of some extension signal; returns NULL if not found
 PATCH_API FExtensionSignal PATCH_CALLTYPE ClassicsExtensions_FindSignal(HPatchPlugin hPlugin, const char *strSignal);
@@ -306,6 +253,70 @@ PATCH_API FExtensionSignal PATCH_CALLTYPE ClassicsExtensions_FindSignal(HPatchPl
 // piResult - pointer to the variable that will hold the result from the function call (may be NULL)
 // pData - optional data that will be passed into the signal call (see FExtensionSignal prototype)
 PATCH_API bool PATCH_CALLTYPE ClassicsExtensions_CallSignal(HPatchPlugin hPlugin, const char *strSignal, int *piResult, void *pData);
+
+//================================================================================================//
+// Extension API
+//
+// The following macros should be utilized when defining features for extension plugins.
+// These features should be coupled with plugin module API to allow Classics Patch to also manage
+// the extension as a regular plugin. See "iplugins.h" header file for more information.
+//================================================================================================//
+
+// Define extension data for Classics Patch
+// Example usage:
+//    CLASSICSPATCH_DEFINE_EXTENSION("PATCH_EXT_fundomizer", k_EPluginFlagGame | k_EPluginFlagServer, MakeVersion(1, 0, 0),
+//      "SAM_IS_AWESOME", "Fundomizer", "Cool plugin for randomizing various gameplay aspects. Works on dedicated servers too!");
+#define CLASSICSPATCH_DEFINE_EXTENSION(extension, utility, version, author, name, description) \
+  PLUGINMODULE_DEFINEMETHOD(void, GETINFO) (PluginInfo_t *pOutInfo) { \
+    pOutInfo->m_ulAPI = CLASSICSPATCH_INTERFACE_VERSION; \
+    pOutInfo->m_ulFlags = utility; \
+    pOutInfo->SetMetadata(version, author, name, description); \
+    pOutInfo->m_strExtensionIdentifier = extension; \
+  };
+
+// Extension handle symbol for easy access to the extension from within itself
+// It only becomes valid after the first initialization of the plugin (i.e. inside CLASSICSPATCH_PLUGIN_STARTUP)
+// Example usage:
+//    extern HPatchPlugin EXTENSIONMODULE_LOCALHANDLE;
+//    ClassicsExtensions_GetInt(EXTENSIONMODULE_LOCALHANDLE, "my_int", &iValue);
+#define EXTENSIONMODULE_LOCALHANDLE  ClassicsPatchExtension_LocalPluginHandle
+
+// Define a local handle to this extension
+// Example usage:
+//    // In global scope
+//    CLASSICSPATCH_DEFINE_EXTENSION_HANDLE;
+//    // In some function
+//    ClassicsExtensions_SetInt(EXTENSIONMODULE_LOCALHANDLE, "my_int", 0);
+#define CLASSICSPATCH_DEFINE_EXTENSION_HANDLE \
+  MODULE_API HPatchPlugin EXTENSIONMODULE_LOCALHANDLE = NULL
+
+// Extension properties symbols
+#define EXTENSIONMODULE_PROPSARRAY  ClassicsPatchExtension_PropsArray
+#define EXTENSIONMODULE_PROPSCOUNT  ClassicsPatchExtension_PropsCount
+
+// Define array of extension properties
+// Example usage:
+//    CLASSICSPATCH_EXTENSION_PROPS_BEGIN {
+//      ExtensionProp_t( "my_bool_property", true ),
+//      ExtensionProp_t( "my_int_property", -1 ),
+//      ExtensionProp_t( "my_float_property", 0.0f ),
+//      ExtensionProp_t( "my_string_property", "Hello, world!" ),
+//    } CLASSICSPATCH_EXTENSION_PROPS_END;
+#define CLASSICSPATCH_EXTENSION_PROPS_BEGIN MODULE_API ExtensionProp_t EXTENSIONMODULE_PROPSARRAY[] =
+#define CLASSICSPATCH_EXTENSION_PROPS_END ; MODULE_API const size_t EXTENSIONMODULE_PROPSCOUNT = ARRAYCOUNT(EXTENSIONMODULE_PROPSARRAY)
+
+// Extension signals symbols
+#define EXTENSIONMODULE_SIGNALARRAY  ClassicsPatchExtension_SignalArray
+#define EXTENSIONMODULE_SIGNALCOUNT  ClassicsPatchExtension_SignalCount
+
+// Define array of extension signals
+// Example usage:
+//    CLASSICSPATCH_EXTENSION_SIGNALS_BEGIN {
+//      { "my_signal_a", &SignalFunc1 }, // No args
+//      { "my_signal_b", &SignalFunc2 }, // Arg ptr : CTFileName
+//    } CLASSICSPATCH_EXTENSION_SIGNALS_END;
+#define CLASSICSPATCH_EXTENSION_SIGNALS_BEGIN MODULE_API ExtensionSignal_t EXTENSIONMODULE_SIGNALARRAY[] =
+#define CLASSICSPATCH_EXTENSION_SIGNALS_END ; MODULE_API const size_t EXTENSIONMODULE_SIGNALCOUNT = ARRAYCOUNT(EXTENSIONMODULE_SIGNALARRAY)
 
 //================================================================================================//
 // Virtual Classics Patch API

@@ -46,14 +46,14 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 #define PLUGINMODULEPROTOTYPE_SHUTDOWN(identifier) void identifier (HIniConfig props)
 
 // Plugin method identifiers
-#define PLUGINMODULEMETHOD_GETINFO  ClassicsPatchPlugin_GetInfo
-#define PLUGINMODULEMETHOD_STARTUP  ClassicsPatchPlugin_Startup
-#define PLUGINMODULEMETHOD_SHUTDOWN ClassicsPatchPlugin_Shutdown
+#define PLUGINMODULEMETHOD_GETINFO   ClassicsPatchPlugin_GetInfo
+#define PLUGINMODULEMETHOD_STARTUP   ClassicsPatchPlugin_Startup
+#define PLUGINMODULEMETHOD_SHUTDOWN  ClassicsPatchPlugin_Shutdown
 
 // Plugin method pointers
-#define PLUGINMODULEPOINTER_GETINFO  __pClassicsPatchPlugin_GetInfo_Func__
-#define PLUGINMODULEPOINTER_STARTUP  __pClassicsPatchPlugin_Startup_Func__
-#define PLUGINMODULEPOINTER_SHUTDOWN __pClassicsPatchPlugin_Shutdown_Func__
+#define PLUGINMODULEPOINTER_GETINFO   __pClassicsPatchPlugin_GetInfo_Func__
+#define PLUGINMODULEPOINTER_STARTUP   __pClassicsPatchPlugin_Startup_Func__
+#define PLUGINMODULEPOINTER_SHUTDOWN  __pClassicsPatchPlugin_Shutdown_Func__
 
 // Intermediate macro for defining a specific plugin method and exporting a pointer to it (don't use)
 #define PLUGINMODULE_DEFINEMETHOD(returntype, method) \
@@ -77,13 +77,15 @@ PATCH_API IClassicsPlugins *PATCH_CALLTYPE ClassicsPlugins(void);
 //    CLASSICSPATCH_PLUGIN_STARTUP(HIniConfig props, PluginEvents_t &events) {
 //      ...startup code and optional interaction with plugin properties...
 //    };
-#define CLASSICSPATCH_PLUGIN_STARTUP PLUGINMODULE_DEFINEMETHOD(void, STARTUP)
+#define CLASSICSPATCH_PLUGIN_STARTUP \
+  PLUGINMODULE_DEFINEMETHOD(void, STARTUP)
 
 // Define plugin shutdown method
 // Example usage:
 //    CLASSICSPATCH_PLUGIN_SHUTDOWN(HIniConfig props) {
 //      ...shutdown code and optional interaction with plugin properties...
 //    };
-#define CLASSICSPATCH_PLUGIN_SHUTDOWN PLUGINMODULE_DEFINEMETHOD(void, SHUTDOWN)
+#define CLASSICSPATCH_PLUGIN_SHUTDOWN \
+  PLUGINMODULE_DEFINEMETHOD(void, SHUTDOWN)
 
 #endif // CLASSICSPATCH_IPLUGINS_H

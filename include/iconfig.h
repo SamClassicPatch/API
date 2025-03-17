@@ -9,6 +9,7 @@
 #include "classicspatch_common.h"
 
 // Opaque handle to an INI config
+// Equal to the class from the XGizmo library
 typedef class CIniConfig *HIniConfig;
 
 // Create a new INI config
