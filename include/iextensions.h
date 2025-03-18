@@ -277,7 +277,6 @@ PATCH_API bool PATCH_CALLTYPE ClassicsExtensions_CallSignal(HPatchPlugin hPlugin
 // Extension handle symbol for easy access to the extension from within itself
 // It only becomes valid after the first initialization of the plugin (i.e. inside CLASSICSPATCH_PLUGIN_STARTUP)
 // Example usage:
-//    extern HPatchPlugin EXTENSIONMODULE_LOCALHANDLE;
 //    ClassicsExtensions_GetInt(EXTENSIONMODULE_LOCALHANDLE, "my_int", &iValue);
 #define EXTENSIONMODULE_LOCALHANDLE  ClassicsPatchExtension_LocalPluginHandle
 
@@ -289,6 +288,10 @@ PATCH_API bool PATCH_CALLTYPE ClassicsExtensions_CallSignal(HPatchPlugin hPlugin
 //    ClassicsExtensions_SetInt(EXTENSIONMODULE_LOCALHANDLE, "my_int", 0);
 #define CLASSICSPATCH_DEFINE_EXTENSION_HANDLE \
   MODULE_API HPatchPlugin EXTENSIONMODULE_LOCALHANDLE = NULL
+
+// Global declaration of the local extension handle for convenience
+// Once defined using CLASSICSPATCH_DEFINE_EXTENSION_HANDLE, it can be used from anywhere
+MODULE_API HPatchPlugin EXTENSIONMODULE_LOCALHANDLE;
 
 // Extension properties symbols
 #define EXTENSIONMODULE_PROPSARRAY  ClassicsPatchExtension_PropsArray
