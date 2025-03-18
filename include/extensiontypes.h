@@ -51,9 +51,9 @@ struct ExtArgEclData_t {
 // Additional cleanup upon destroying a world converter instance
 typedef void (*FWorldConverterDestructor)(void);
 
-// "PATCH_EXT_wldconverters" - "SetMethodReset" via ExtArgWorldConverter_t::pData
-// Reset a world converter to the default state before loading a new world
-typedef void (*FWorldConverterReset)(void);
+// "PATCH_EXT_wldconverters" - "SetMethodPrepare" via ExtArgWorldConverter_t::pData
+// Prepare the world converter before loading a new world
+typedef void (*FWorldConverterPrepare)(void);
 
 // "PATCH_EXT_wldconverters" - "SetMethodReplaceClass" via ExtArgWorldConverter_t::pData
 // Dynamically replace some class from some library upon creating it
