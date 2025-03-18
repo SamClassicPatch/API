@@ -26,11 +26,36 @@
 
 // "PATCH_EXT_wldconverters" - "HandleUnknownProperty"
 struct ExtArgUnknownProp_t {
-  class CEntity *pen;
-  ULONG ulType;
-  ULONG ulID;
-  void *pValue;
+  class CEntity *pen; // Entity to retrieve the property value from
+  ULONG ulType; // Property type, i.e. CEntityProperty::PropertyType
+  ULONG ulID;   // Property ID, i.e. what should've been in CEntityProperty::ep_ulID
+  void *pValue; // Pointer to any value type
 };
+
+// "PATCH_EXT_wldconverters" - various signals
+// Generic structure with a converter and optional data to pass into a signal
+struct ExtArgWorldConverter_t {
+  int iID; // World converter ID returned by "CreateConverter", "GetConverterForFormat" and "GetConverterByName"
+  void *pData; // Specific data depending on the signal
+
+  ExtArgWorldConverter_t() : iID(-1), pData(NULL) {};
+};
+
+// "PATCH_EXT_wldconverters" - "SetMethodDestructor" via ExtArgWorldConverter_t::pData
+// Additional cleanup upon destroying a world converter instance
+typedef void (*FWorldConverterDestructor)(void);
+
+// "PATCH_EXT_wldconverters" - "SetMethodReset" via ExtArgWorldConverter_t::pData
+// Reset a world converter to the default state before loading a new world
+typedef void (*FWorldConverterReset)(void);
+
+// "PATCH_EXT_wldconverters" - "SetMethodHandleProperty" via ExtArgWorldConverter_t::pData
+// Handle some unknown property entity property
+typedef void (*FWorldConverterHandleProperty)(const ExtArgUnknownProp_t &prop);
+
+// "PATCH_EXT_wldconverters" - "SetMethodConvertWorld" via ExtArgWorldConverter_t::pData
+// Perform a conversion on a world (e.g. reinitialize specific entities)
+typedef void (*FWorldConverterConvert)(class CWorld *pwo);
 
 // "PATCH_EXT_wldconverters" - "ReplaceMissingClasses"
 struct ExtArgEclData_t {
