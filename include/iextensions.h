@@ -236,7 +236,7 @@ inline void ExtensionPropRef_t<void *>::SetupReference(HPatchPlugin hExtension, 
 
 // Function handler of an extension signal
 // Input data and output value are completely optional and depend on the function implementation
-typedef int (*FExtensionSignal)(void *pOptionalData);
+typedef int (PATCH_CALLTYPE *FExtensionSignal)(void *pOptionalData);
 
 // One extension signal in the array
 struct ExtensionSignal_t
