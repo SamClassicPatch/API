@@ -15,6 +15,10 @@ PATCH_API PatchVer_t PATCH_CALLTYPE ClassicsCore_GetVersion(void);
 // Not the same as simply doing MakeVersionString( strVersion, ClassicsPatchAPI_GetVersion() )
 PATCH_API const PatchVerString_t &PATCH_CALLTYPE ClassicsCore_GetVersionName(void);
 
+// Return time when Classics Patch has been initialized
+// Should be used as CTimerValue by calling its constructor like this: CTimerValue( ClassicsCore_GetInitTime() )
+PATCH_API __int64 PATCH_CALLTYPE ClassicsCore_GetInitTime(void);
+
 // Get type of the application that Classics Patch is running on
 // Always returns k_EClassicsPatchAppType_Unknown until ClassicsPatchAPI_Setup() is called
 PATCH_API EClassicsPatchAppType PATCH_CALLTYPE ClassicsCore_GetAppType(void);
@@ -84,6 +88,8 @@ public:
   virtual HMODULE GetEntitiesHandle(void) { return ClassicsCore_GetEntitiesHandle(); };
   virtual void *GetEngineSymbol(const char *strSymbol) { return ClassicsCore_GetEntitiesSymbol(strSymbol); };
   virtual void *GetEntitiesSymbol(const char *strSymbol) { return ClassicsCore_GetEntitiesSymbol(strSymbol); };
+
+  virtual __int64 GetInitTime(void) { return ClassicsCore_GetInitTime(); };
 };
 
 #endif // CLASSICSPATCH_ICORE_H
