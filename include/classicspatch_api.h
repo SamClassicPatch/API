@@ -29,7 +29,7 @@
 
 // Current version of Classics Patch API
 // a.k.a. the version used by the external module
-#define CLASSICSPATCH_INTERFACE_VERSION 003
+#define CLASSICSPATCH_INTERFACE_VERSION 004
 
 enum EVerifyAPIResult
 {
