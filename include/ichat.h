@@ -43,6 +43,9 @@ enum EChatCommandAccessLevel {
   k_EChatCommandAccessLevel_Max,
 };
 
+// Callback function for determining whether a chat command is currently usable by some client
+typedef BOOL (*FCheckChatCommand)(INDEX iClient);
+
 // Register a new chat command with a Serious Engine compatible function
 PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommand(const char *strName, FEngineChatCommand pFunction);
 
@@ -55,6 +58,10 @@ PATCH_API void PATCH_CALLTYPE ClassicsChat_UnregisterCommand(const char *strName
 // Set access level for some chat command and whether to hide it from regular clients when listing it using the "!help" command
 // Returns true if the access has been updated
 PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, BOOL bHidden);
+
+// Set a callback function for some chat command for checking whether it's currently usable and should be listed using the "!help" command
+// Returns true if the callback function has been updated
+PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandCheck(const char *strName, FCheckChatCommand pFunction);
 
 // Set useful usage information about some chat command when listing it using the "!help" command
 // strArgumentList - List of arguments that the command accepts surrounded by <> (for required arguments) or by [] (for optional arguments), for example: "<index> <time> [message]"
