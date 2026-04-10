@@ -82,6 +82,7 @@ public:
 
   virtual BOOL SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, BOOL bHidden) { return ClassicsChat_SetCommandAccess(strName, eAccess, bHidden); };
   virtual BOOL SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription) { return ClassicsChat_SetCommandInfo(strName, strArgumentList, strDescription); };
+  virtual BOOL SetCommandCheck(const char *strName, FCheckChatCommand pFunction) { return ClassicsChat_SetCommandCheck(strName, pFunction); };
 };
 
 #endif // CLASSICSPATCH_ICHAT_H
