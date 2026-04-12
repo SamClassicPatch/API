@@ -69,6 +69,11 @@ PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandCheck(const char *strName, 
 // Returns true if the infomation has been updated
 PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription);
 
+// Returns name of the currently processed command for distinguishing behavior using the same chat command callbacks
+// Only valid during execution of the following command callbacks (otherwise returns NULL):
+//   FEngineChatCommand, FPureChatCommand, FCheckChatCommand
+PATCH_API const char *PATCH_CALLTYPE ClassicsChat_CurrentCommand(void);
+
 //================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
@@ -83,6 +88,8 @@ public:
   virtual BOOL SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, BOOL bHidden) { return ClassicsChat_SetCommandAccess(strName, eAccess, bHidden); };
   virtual BOOL SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription) { return ClassicsChat_SetCommandInfo(strName, strArgumentList, strDescription); };
   virtual BOOL SetCommandCheck(const char *strName, FCheckChatCommand pFunction) { return ClassicsChat_SetCommandCheck(strName, pFunction); };
+
+  virtual const char *CurrentCommand(void) { return ClassicsChat_CurrentCommand(); };
 };
 
 #endif // CLASSICSPATCH_ICHAT_H
