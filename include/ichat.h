@@ -77,6 +77,14 @@ PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandInfo(const char *strName, c
 //   FEngineChatCommand, FPureChatCommand, FCheckChatCommand
 PATCH_API const char *PATCH_CALLTYPE ClassicsChat_CurrentCommand(void);
 
+// Specify user data for some chat command
+// Returns true if the user data has been updated
+PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandUserData(const char *strName, void *pUserData);
+
+// Retrieve specified user data for some chat command
+// Returns NULL if user data hasn't been specified or the command doesn't exist
+PATCH_API void *PATCH_CALLTYPE ClassicsChat_GetCommandUserData(const char *strName);
+
 //================================================================================================//
 // Virtual Classics Patch API
 //================================================================================================//
@@ -93,8 +101,9 @@ public:
   virtual BOOL SetCommandCheck(const char *strName, FCheckChatCommand pFunction) { return ClassicsChat_SetCommandCheck(strName, pFunction); };
 
   virtual const char *CurrentCommand(void) { return ClassicsChat_CurrentCommand(); };
-
   virtual BOOL CommandExists(const char *strName) { return ClassicsChat_CommandExists(strName); };
+  virtual BOOL SetCommandUserData(const char *strName, void *pUserData) { return ClassicsChat_SetCommandUserData(strName, pUserData); };
+  virtual void *GetCommandUserData(const char *strName) { return ClassicsChat_GetCommandUserData(strName); };
 };
 
 #endif // CLASSICSPATCH_ICHAT_H
