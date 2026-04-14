@@ -55,6 +55,9 @@ PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommandPure(const char *strNa
 // Unregister a chat command by its name
 PATCH_API void PATCH_CALLTYPE ClassicsChat_UnregisterCommand(const char *strName);
 
+// Check whether some chat command has been registered
+PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_CommandExists(const char *strName);
+
 // Set access level for some chat command and whether to hide it from regular clients when listing it using the "!help" command
 // Returns true if the access has been updated
 PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, BOOL bHidden);
@@ -90,6 +93,8 @@ public:
   virtual BOOL SetCommandCheck(const char *strName, FCheckChatCommand pFunction) { return ClassicsChat_SetCommandCheck(strName, pFunction); };
 
   virtual const char *CurrentCommand(void) { return ClassicsChat_CurrentCommand(); };
+
+  virtual BOOL CommandExists(const char *strName) { return ClassicsChat_CommandExists(strName); };
 };
 
 #endif // CLASSICSPATCH_ICHAT_H
