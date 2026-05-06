@@ -27,12 +27,12 @@ typedef char ChatCommandResultStr[k_cchMaxChatCommandResultStr];
 // Return value signifies whether or not the command should be displayed in chat as a regular message
 // Typically, if the command cannot/shouldn't be processed for some reason (e.g. if the client index doesn't belong to the host),
 // the function must return false (but can still perform necessary internal actions), otherwise it's almost always true
-typedef BOOL (*FEngineChatCommand)(CTString &strResult, INDEX iClient, const CTString &strArguments);
+typedef BOOL (PATCH_CALLTYPE *FEngineChatCommand)(CTString &strResult, INDEX iClient, const CTString &strArguments);
 
 // Function prototype compatible with C API
 // These functions should be used instead of FEngineChatCommand when Serious Engine is not available *or* your module
 // is built using a compiler that differs from the one Serious Engine was build with (MSVC 6.0 for 1.05 and 1.07)
-typedef BOOL (*FPureChatCommand)(ChatCommandResultStr &strResult, INDEX iClient, const char *strArguments);
+typedef BOOL (PATCH_CALLTYPE *FPureChatCommand)(ChatCommandResultStr &strResult, INDEX iClient, const char *strArguments);
 
 // Chat command access levels
 enum EChatCommandAccessLevel {
@@ -44,7 +44,7 @@ enum EChatCommandAccessLevel {
 };
 
 // Callback function for determining whether a chat command is currently usable by some client
-typedef BOOL (*FCheckChatCommand)(INDEX iClient);
+typedef BOOL (PATCH_CALLTYPE *FCheckChatCommand)(INDEX iClient);
 
 // Register a new chat command with a Serious Engine compatible function
 PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommand(const char *strName, FEngineChatCommand pFunction);

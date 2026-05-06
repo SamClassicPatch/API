@@ -49,23 +49,23 @@ struct ExtArgEclData_t {
 
 // "PATCH_EXT_wldconverters" - "SetMethodDestructor" via ExtArgWorldConverter_t::pData
 // Additional cleanup upon destroying a world converter instance
-typedef void (*FWorldConverterDestructor)(void);
+typedef void (PATCH_CALLTYPE *FWorldConverterDestructor)(void);
 
 // "PATCH_EXT_wldconverters" - "SetMethodPrepare" via ExtArgWorldConverter_t::pData
 // Prepare the world converter before loading a new world
-typedef void (*FWorldConverterPrepare)(void);
+typedef void (PATCH_CALLTYPE *FWorldConverterPrepare)(void);
 
 // "PATCH_EXT_wldconverters" - "SetMethodReplaceClass" via ExtArgWorldConverter_t::pData
 // Dynamically replace some class from some library upon creating it
 // Returns true if the class (or the library it's in) has been replaced
-typedef bool (*FWorldConverterReplaceClass)(ExtArgEclData_t &eclData);
+typedef bool (PATCH_CALLTYPE *FWorldConverterReplaceClass)(ExtArgEclData_t &eclData);
 
 // "PATCH_EXT_wldconverters" - "SetMethodHandleProperty" via ExtArgWorldConverter_t::pData
 // Handle some unknown property entity property
-typedef void (*FWorldConverterHandleProperty)(const ExtArgUnknownProp_t &prop);
+typedef void (PATCH_CALLTYPE *FWorldConverterHandleProperty)(const ExtArgUnknownProp_t &prop);
 
 // "PATCH_EXT_wldconverters" - "SetMethodConvertWorld" via ExtArgWorldConverter_t::pData
 // Perform a conversion on a world (e.g. reinitialize specific entities)
-typedef void (*FWorldConverterConvert)(class CWorld *pwo);
+typedef void (PATCH_CALLTYPE *FWorldConverterConvert)(class CWorld *pwo);
 
 #endif // CLASSICSPATCH_EXTENSIONTYPES_H
