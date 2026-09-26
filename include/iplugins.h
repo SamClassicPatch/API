@@ -19,6 +19,16 @@ public:
 
   // Register a plugin method in the shell or replace an existing one
   virtual void RegisterMethod(bool bUser, const char *strReturnType, const char *strFunctionName, const char *strArgumentTypes, void *pFunction) = 0;
+
+  // Load all user plugins of specific utility types (EPluginFlags)
+  virtual void LoadPlugins(ULONG ulUtilityFlags) = 0;
+
+  // Release all user plugins of specific utility types (EPluginFlags)
+  virtual void ReleasePlugins(ULONG ulUtilityFlags, BOOL bForce = FALSE) = 0;
+
+  // Obtain pointer to a plugin module of specific utility types
+  // Should always return a handle to a plugin, otherwise throws an exception of type "const char *" with the error message
+  virtual HPatchPlugin ObtainPlugin_t(const CTFileName &fnmModule, ULONG ulUtilityFlags) = 0;
 };
 
 // Get pointer to the plugin interface

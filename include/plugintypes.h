@@ -8,6 +8,10 @@
 
 #include "classicspatch_common.h"
 
+// Opaque handle type for referencing specific extensions
+// Equal to the class from the Core library
+typedef class CPluginModule *HPatchPlugin;
+
 // Flags for setting utility types to plugins, and to be used when loading and releasing plugins
 enum EPluginFlags {
   // Isn't loaded nor released by the plugin API

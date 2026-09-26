@@ -76,6 +76,7 @@ PATCH_API void PATCH_CALLTYPE ClassicsPatch_Shutdown(void);
 // If the API library is not linked, this interface can only be accessed *after* Classics Patch
 // initialization through the game shell using "ClassicsPatchAPI" symbol like this:
 //    CShellSymbol *pssAPI = _pShell->GetSymbol("ClassicsPatchAPI", TRUE);
+//    IClassicsPatchAPI *pAPI = (pssAPI ? pssAPI->ss_pvValue : NULL);
 //
 // NOTE: The old "CoreAPI" symbol is still available but is now deprecated and acts as an alias
 // for the new symbol. It is left purely for compatibility purposes in case some mod checks for

@@ -10,10 +10,6 @@
 #include "extensiontypes.h"
 #include "iplugins.h"
 
-// Opaque handle type for referencing specific extensions
-// Equal to the class from the Core library
-typedef class CPluginModule *HPatchPlugin;
-
 // Get current amount of available extensions
 PATCH_API int PATCH_CALLTYPE ClassicsExtensions_GetExtensionCount(void);
 
