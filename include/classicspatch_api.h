@@ -69,6 +69,34 @@ PATCH_API void PATCH_CALLTYPE ClassicsPatch_Init(void);
 PATCH_API void PATCH_CALLTYPE ClassicsPatch_Shutdown(void);
 
 //================================================================================================//
+// Classics Patch engine patches
+//
+// For more thorough integration via specialized patches of various Serious Engine functions.
+// These functions take a name of a specific "category" of engine patches that may patch a series
+// of engine functions and may register shell symbols associated with them for any customization
+// that has been implemented via those function patches.
+// Each function has its own unique set of categories it can take and there is no guarantee that
+// any of them are shared between each other. If the category of engine patches doesn't exist, no
+// patching takes place and the functions return a non-zero value to indicate an error.
+//
+// These functions may only be called *once* per specified category and any subsequent calls may
+// cause undefined behavior! Any applied engine patches can only be undone by fully shutting down
+// Classics Patch!
+// These functions should not be used by external modules, unless they're never called by the
+// main project that the module is trying to interact with (e.g. via code injection).
+//================================================================================================//
+
+// Should be called *before* Serious Engine initialization (SE_InitEngine) BUT *after* Classics Patch setup (ClassicsPatch_Setup)
+// It can be called *only once* per specified category of engine patches and can only be undone by fully shutting down Classics Patch!
+// Returns zero if the patch category has been applied and a non-zero value on error
+PATCH_API int PATCH_CALLTYPE ClassicsPatch_PreInitPatches(const char *strEnginePatchesCategory);
+
+// Should be called *after* Serious Engine initialization (SE_InitEngine) AND *after* Classics Patch initialization (ClassicsPatch_Init)
+// It can be called *only once* per specified category of engine patches and can only be undone by fully shutting down Classics Patch!
+// Returns zero if the patch category has been applied and a non-zero value on error
+PATCH_API int PATCH_CALLTYPE ClassicsPatch_PostInitPatches(const char *strEnginePatchesCategory);
+
+//================================================================================================//
 // Virtual Classics Patch API
 //
 // This virtual interface can be used when there is any problem with direct linking of the core
@@ -114,12 +142,16 @@ struct ClassicsPatchGlobalFunctions
   typedef void (PATCH_CALLTYPE *FSetup)(EClassicsPatchAppType);
   typedef void (PATCH_CALLTYPE *FInit)(void);
   typedef void (PATCH_CALLTYPE *FShutdown)(void);
+  typedef int (PATCH_CALLTYPE *FPreInitPatches)(const char *);
+  typedef int (PATCH_CALLTYPE *FPostInitPatches)(const char *);
 
   FVerifyInternal _VerifyInternal;
   FIsRunning _IsRunning;
   FSetup _Setup;
   FInit _Init;
   FShutdown _Shutdown;
+  FPreInitPatches _PreInitPatches;
+  FPostInitPatches _PostInitPatches;
 
   // Simple wrapper for ClassicsPatchAPI_Verify()
   inline EVerifyAPIResult _Verify(ClassicsPatchErrMsg *pOutErrMsg) {
@@ -138,11 +170,13 @@ inline bool ClassicsPatch_GetGlobalFunctionsFromModule(ClassicsPatchGlobalFuncti
   HMODULE hCore = GetModuleHandleA("ClassicsCore.dll");
 
   if (hCore != NULL) {
-    pFunctions->_VerifyInternal = (ClassicsPatchGlobalFunctions::FVerifyInternal)GetProcAddress(hCore, "ClassicsPatchAPI_VerifyInternal");
-    pFunctions->_IsRunning      = (ClassicsPatchGlobalFunctions::FIsRunning)GetProcAddress(hCore, "ClassicsPatchAPI_IsRunning");
-    pFunctions->_Setup          = (ClassicsPatchGlobalFunctions::FSetup)GetProcAddress(hCore, "ClassicsPatch_Setup");
-    pFunctions->_Init           = (ClassicsPatchGlobalFunctions::FInit)GetProcAddress(hCore, "ClassicsPatch_Init");
-    pFunctions->_Shutdown       = (ClassicsPatchGlobalFunctions::FShutdown)GetProcAddress(hCore, "ClassicsPatch_Shutdown");
+    pFunctions->_VerifyInternal  = (ClassicsPatchGlobalFunctions::FVerifyInternal)GetProcAddress(hCore, "ClassicsPatchAPI_VerifyInternal");
+    pFunctions->_IsRunning       = (ClassicsPatchGlobalFunctions::FIsRunning)GetProcAddress(hCore, "ClassicsPatchAPI_IsRunning");
+    pFunctions->_Setup           = (ClassicsPatchGlobalFunctions::FSetup)GetProcAddress(hCore, "ClassicsPatch_Setup");
+    pFunctions->_Init            = (ClassicsPatchGlobalFunctions::FInit)GetProcAddress(hCore, "ClassicsPatch_Init");
+    pFunctions->_Shutdown        = (ClassicsPatchGlobalFunctions::FShutdown)GetProcAddress(hCore, "ClassicsPatch_Shutdown");
+    pFunctions->_PreInitPatches  = (ClassicsPatchGlobalFunctions::FPreInitPatches)GetProcAddress(hCore, "ClassicsPatch_PreInitPatches");
+    pFunctions->_PostInitPatches = (ClassicsPatchGlobalFunctions::FPostInitPatches)GetProcAddress(hCore, "ClassicsPatch_PostInitPatches");
 
     return true;
   }
