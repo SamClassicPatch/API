@@ -29,16 +29,16 @@ void PATCH_CALLTYPE IRenderingEvents_OnPostDraw(CDrawPort *pdp);
 void PATCH_CALLTYPE IRenderingEvents_OnRenderView(CWorld &wo, CEntity *penViewer, CAnyProjection3D &apr, CDrawPort *pdp);
 
 // Network
-BOOL PATCH_CALLTYPE INetworkEvents_OnServerPacket(CNetworkMessage &nmMessage, const ULONG ulType);
-BOOL PATCH_CALLTYPE INetworkEvents_OnClientPacket(CNetworkMessage &nmMessage, const ULONG ulType);
-void PATCH_CALLTYPE INetworkEvents_OnAddPlayer(CPlayerTarget &plt, BOOL bLocal);
-void PATCH_CALLTYPE INetworkEvents_OnRemovePlayer(CPlayerTarget &plt, BOOL bLocal);
+PatchBOOL PATCH_CALLTYPE INetworkEvents_OnServerPacket(CNetworkMessage &nmMessage, const PatchU32 ulType);
+PatchBOOL PATCH_CALLTYPE INetworkEvents_OnClientPacket(CNetworkMessage &nmMessage, const PatchU32 ulType);
+void PATCH_CALLTYPE INetworkEvents_OnAddPlayer(CPlayerTarget &plt, PatchBOOL bLocal);
+void PATCH_CALLTYPE INetworkEvents_OnRemovePlayer(CPlayerTarget &plt, PatchBOOL bLocal);
 
 // Packets
-void PATCH_CALLTYPE IPacketEvents_OnCharacterConnect(INDEX iClient, CPlayerCharacter &pc);
-BOOL PATCH_CALLTYPE IPacketEvents_OnCharacterChange(INDEX iClient, INDEX iPlayer, CPlayerCharacter &pc);
-void PATCH_CALLTYPE IPacketEvents_OnPlayerAction(INDEX iClient, INDEX iPlayer, CPlayerAction &pa, INDEX iResent);
-BOOL PATCH_CALLTYPE IPacketEvents_OnChatMessage(INDEX iClient, ULONG ulFrom, ULONG ulTo, CTString &strMessage);
+void PATCH_CALLTYPE IPacketEvents_OnCharacterConnect(PatchINDEX iClient, CPlayerCharacter &pc);
+PatchBOOL PATCH_CALLTYPE IPacketEvents_OnCharacterChange(PatchINDEX iClient, PatchINDEX iPlayer, CPlayerCharacter &pc);
+void PATCH_CALLTYPE IPacketEvents_OnPlayerAction(PatchINDEX iClient, PatchINDEX iPlayer, CPlayerAction &pa, PatchINDEX iResent);
+PatchBOOL PATCH_CALLTYPE IPacketEvents_OnChatMessage(PatchINDEX iClient, PatchU32 ulFrom, PatchU32 ulTo, CTString &strMessage);
 
 // Game
 void PATCH_CALLTYPE IGameEvents_OnGameStart(void);
@@ -57,7 +57,7 @@ void PATCH_CALLTYPE IWorldEvents_OnWorldLoad(CWorld *pwo, const CTFileName &fnmW
 
 // Listeners
 void PATCH_CALLTYPE IListenerEvents_OnSendEvent(CEntity *pen, const CEntityEvent &ee);
-void PATCH_CALLTYPE IListenerEvents_OnReceiveItem(CEntity *penPlayer, const CEntityEvent &ee, BOOL bPickedUp);
+void PATCH_CALLTYPE IListenerEvents_OnReceiveItem(CEntity *penPlayer, const CEntityEvent &ee, PatchBOOL bPickedUp);
 void PATCH_CALLTYPE IListenerEvents_OnCallProcedure(CEntity *pen, const CEntityEvent &ee);
 
 // Timer

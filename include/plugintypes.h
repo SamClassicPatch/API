@@ -31,11 +31,11 @@ const int k_cchMaxPluginInfoString = 256;
 
 // Information about the plugin set by the plugin (but never instantiated by it!)
 struct PluginInfo_t {
-  ULONG m_ulAPI; // API version the plugin utilizes
-  ULONG m_ulFlags; // Utility flags from EPluginFlags
+  PatchU32 m_ulAPI; // API version the plugin utilizes
+  PatchU32 m_ulFlags; // Utility flags from EPluginFlags
 
   // Metadata
-  ULONG m_ulVersion; // Plugin version using MakeVersion() method
+  PatchU32 m_ulVersion; // Plugin version using MakeVersion() method
   char m_strAuthor[k_cchMaxPluginInfoString]; // Author name
   char m_strName[k_cchMaxPluginInfoString]; // Plugin display name
   char m_strDescription[k_cchMaxPluginInfoString]; // Brief description of the plugin
@@ -44,7 +44,7 @@ struct PluginInfo_t {
   // in order to utilize its functionality. Otherwise NULL for regular plugins that wish to do their own thing in peace.
   const char *m_strExtensionIdentifier;
 
-  inline void SetMetadata(ULONG ulVersion, const char *strAuthor, const char *strName, const char *strDescription)
+  inline void SetMetadata(PatchU32 ulVersion, const char *strAuthor, const char *strName, const char *strDescription)
   {
     m_ulVersion = ulVersion;
     CopyZeroTerminatedString(m_strAuthor, strAuthor, k_cchMaxPluginInfoString);
@@ -63,7 +63,7 @@ struct PluginSymbol_t
     k_ESymbolString = 2, // CTString
   };
 
-  ULONG m_ulFlags; // Only SSF_CONSTANT, SSF_PERSISTENT and SSF_USER
+  PatchU32 m_ulFlags; // Only SSF_CONSTANT, SSF_PERSISTENT and SSF_USER
 
   // Depending on the type, an appropriate default value should be set from the union below
   int m_eSymbolType; // ESymbolType
@@ -78,7 +78,7 @@ struct PluginSymbol_t
   class CShellSymbol *m_pShellSymbol;
 
   // Construct from an integer value
-  PluginSymbol_t(ULONG ulFlags, int iDefValue)
+  PluginSymbol_t(PatchU32 ulFlags, int iDefValue)
   {
     m_ulFlags = ulFlags;
     m_eSymbolType = k_ESymbolIndex;
@@ -86,7 +86,7 @@ struct PluginSymbol_t
   };
 
   // Construct from a float value
-  PluginSymbol_t(ULONG ulFlags, float fDefValue)
+  PluginSymbol_t(PatchU32 ulFlags, float fDefValue)
   {
     m_ulFlags = ulFlags;
     m_eSymbolType = k_ESymbolFloat;
@@ -94,7 +94,7 @@ struct PluginSymbol_t
   };
 
   // Construct from a string value
-  PluginSymbol_t(ULONG ulFlags, const char *strDefValue)
+  PluginSymbol_t(PatchU32 ulFlags, const char *strDefValue)
   {
     m_ulFlags = ulFlags;
     m_eSymbolType = k_ESymbolString;

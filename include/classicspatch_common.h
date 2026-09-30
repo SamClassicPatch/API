@@ -19,18 +19,23 @@
 #define PATCH_CALLTYPE __cdecl
 
 // Integral types
-typedef signed long  int    SLONG;
-typedef signed short int    SWORD;
-typedef signed char	        SBYTE;
-typedef signed int          SINT;
+typedef signed long  int   PatchS32; // Serious Engine 1 - SLONG
+typedef signed short int   PatchS16; // Serious Engine 1 - SWORD
+typedef signed char	       PatchS8;  // Serious Engine 1 - SBYTE
 
-typedef unsigned long  int  ULONG;
-typedef unsigned short int  UWORD;
-typedef unsigned char       UBYTE;
-typedef unsigned int        UINT;
+typedef unsigned long  int PatchU32; // Serious Engine 1 - ULONG
+typedef unsigned short int PatchU16; // Serious Engine 1 - UWORD
+typedef unsigned char      PatchU8;  // Serious Engine 1 - UBYTE
 
-typedef      int BOOL;
-typedef long int INDEX;
+typedef      int PatchBOOL;  // Serious Engine 1 - BOOL
+typedef long int PatchINDEX; // Serious Engine 1 - INDEX
+
+#ifndef FALSE
+  #define FALSE 0
+#endif
+#ifndef TRUE
+  #define TRUE 1
+#endif
 
 // A fixed-size buffer to receive an error message that is returned by some API calls
 const int k_cchMaxClassicsPatchErrMsg = 1024;
@@ -64,16 +69,16 @@ enum EClassicsPatchSeason
 };
 
 // Classics Patch version number
-typedef ULONG PatchVer_t;
+typedef PatchU32 PatchVer_t;
 typedef char PatchVerString_t[256];
 
 // Construct version number
-inline PatchVer_t MakeVersion(UBYTE ubRelease, UBYTE ubUpdate, UBYTE ubPatch) {
+inline PatchVer_t MakeVersion(PatchU8 ubRelease, PatchU8 ubUpdate, PatchU8 ubPatch) {
   return (ubRelease << 16) | (ubUpdate << 8) | (ubPatch << 0);
 };
 
 // Deconstruct version number
-inline void GetVersionNumbers(PatchVer_t ulVersionNumber, UBYTE &ubRelease, UBYTE &ubUpdate, UBYTE &ubPatch) {
+inline void GetVersionNumbers(PatchVer_t ulVersionNumber, PatchU8 &ubRelease, PatchU8 &ubUpdate, PatchU8 &ubPatch) {
   ubRelease = (ulVersionNumber >> 16) & 0xFF;
   ubUpdate  = (ulVersionNumber >>  8) & 0xFF;
   ubPatch   = (ulVersionNumber >>  0) & 0xFF;
@@ -82,7 +87,7 @@ inline void GetVersionNumbers(PatchVer_t ulVersionNumber, UBYTE &ubRelease, UBYT
 // Retrieve version number as a printable string
 // Right now the longest the version string can be is "255.255.255"
 inline void MakeVersionString(PatchVerString_t &strOutVersion, PatchVer_t ulVersionNumber) {
-  UBYTE ubRelease, ubUpdate, ubPatch;
+  PatchU8 ubRelease, ubUpdate, ubPatch;
   GetVersionNumbers(ulVersionNumber, ubRelease, ubUpdate, ubPatch);
 
   // Discard the patch integer if it's a full release, e.g. "1.10" instead of "1.10.0"

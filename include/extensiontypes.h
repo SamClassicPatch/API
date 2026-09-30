@@ -27,8 +27,8 @@
 // "PATCH_EXT_wldconverters" - "HandleUnknownProperty"
 struct ExtArgUnknownProp_t {
   class CEntity *pen; // Entity to retrieve the property value from
-  ULONG ulType; // Property type, i.e. CEntityProperty::PropertyType
-  ULONG ulID;   // Property ID, i.e. what should've been in CEntityProperty::ep_ulID
+  PatchU32 ulType; // Property type, i.e. CEntityProperty::PropertyType
+  PatchU32 ulID;   // Property ID, i.e. what should've been in CEntityProperty::ep_ulID
   void *pValue; // Pointer to any value type
 };
 

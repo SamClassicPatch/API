@@ -78,19 +78,19 @@ struct INetworkEvents
 {
   // Upon receiving an extension packet as a server
   // Should return true if the packet was handled and shouldn't be processed by other plugins down the list
-  BOOL (PATCH_CALLTYPE *OnServerPacket)(CNetworkMessage &nmMessage, const ULONG ulType);
+  PatchBOOL (PATCH_CALLTYPE *OnServerPacket)(CNetworkMessage &nmMessage, const PatchU32 ulType);
 
   // Upon receiving an extension packet as a client
   // Should return true if the packet was handled and shouldn't be processed by other plugins down the list
-  BOOL (PATCH_CALLTYPE *OnClientPacket)(CNetworkMessage &nmMessage, const ULONG ulType);
+  PatchBOOL (PATCH_CALLTYPE *OnClientPacket)(CNetworkMessage &nmMessage, const PatchU32 ulType);
 
   // Upon adding a new player to the game
   // bLocal is only equal to true when a player of the local client is added, not of other clients
-  void (PATCH_CALLTYPE *OnAddPlayer)(CPlayerTarget &plt, BOOL bLocal);
+  void (PATCH_CALLTYPE *OnAddPlayer)(CPlayerTarget &plt, PatchBOOL bLocal);
 
   // Upon removing a player from the game
   // bLocal is only equal to true when a player of the local client is removed, not of other clients
-  void (PATCH_CALLTYPE *OnRemovePlayer)(CPlayerTarget &plt, BOOL bLocal);
+  void (PATCH_CALLTYPE *OnRemovePlayer)(CPlayerTarget &plt, PatchBOOL bLocal);
 };
 
 // Events for interacting with specific packets received from clients by the server
@@ -98,7 +98,7 @@ struct IPacketEvents
 {
   // Upon a player of some client joining the game with some player character
   // Can be used to customize characters of any player to force a specific name, skin and settings
-  void (PATCH_CALLTYPE *OnCharacterConnect)(INDEX iClient, CPlayerCharacter &pc);
+  void (PATCH_CALLTYPE *OnCharacterConnect)(PatchINDEX iClient, CPlayerCharacter &pc);
 
   // Upon changing character of a specific player of a client
   // Can be used to customize characters of any player to force a specific name, skin and settings
@@ -108,7 +108,7 @@ struct IPacketEvents
   // iPlayer can be used in:
   // - CServer::srv_aplbPlayers for CPlayerBuffer (currently set character)
   // - CSessionState::ses_apltPlayers for CPlayerTarget (associated player entity)
-  BOOL (PATCH_CALLTYPE *OnCharacterChange)(INDEX iClient, INDEX iPlayer, CPlayerCharacter &pc);
+  PatchBOOL (PATCH_CALLTYPE *OnCharacterChange)(PatchINDEX iClient, PatchINDEX iPlayer, CPlayerCharacter &pc);
 
   // Upon receiving actions for a specific player of a client
   //
@@ -116,12 +116,12 @@ struct IPacketEvents
   // - CServer::srv_aplbPlayers for CPlayerBuffer (last send action)
   // - CSessionState::ses_apltPlayers for CPlayerTarget (associated player entity)
   // iResent is equal to -1 for normal actions and >=0 for resent actions
-  void (PATCH_CALLTYPE *OnPlayerAction)(INDEX iClient, INDEX iPlayer, CPlayerAction &pa, INDEX iResent);
+  void (PATCH_CALLTYPE *OnPlayerAction)(PatchINDEX iClient, PatchINDEX iPlayer, CPlayerAction &pa, PatchINDEX iResent);
 
   // Upon receiving a chat message addressed from specific players to other players
   // If this method returns false, it won't be shown in chat as a regular chat message
   // strMessage - chat message that may be modified before being passed into the internal chat command parser
-  BOOL (PATCH_CALLTYPE *OnChatMessage)(INDEX iClient, ULONG ulFrom, ULONG ulTo, CTString &strMessage);
+  PatchBOOL (PATCH_CALLTYPE *OnChatMessage)(PatchINDEX iClient, PatchU32 ulFrom, PatchU32 ulTo, CTString &strMessage);
 };
 
 // Events for catching generic game actions
@@ -187,7 +187,7 @@ struct IListenerEvents
   // penPlayer - player entity that received the item
   // ee - item pickup event, e.g. EArmor or EWeaponItem
   // bPickedUp - return value from the actual CPlayer::ReceiveItem() call
-  void (PATCH_CALLTYPE *OnReceiveItem)(CEntity *penPlayer, const CEntityEvent &ee, BOOL bPickedUp);
+  void (PATCH_CALLTYPE *OnReceiveItem)(CEntity *penPlayer, const CEntityEvent &ee, PatchBOOL bPickedUp);
 
   // Upon calling an internal subautomation within entity logic via CRationalEntity::Call()
   void (PATCH_CALLTYPE *OnCallProcedure)(CEntity *pen, const CEntityEvent &ee);

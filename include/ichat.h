@@ -27,12 +27,12 @@ typedef char ChatCommandResultStr[k_cchMaxChatCommandResultStr];
 // Return value signifies whether or not the command should be displayed in chat as a regular message
 // Typically, if the command cannot/shouldn't be processed for some reason (e.g. if the client index doesn't belong to the host),
 // the function must return false (but can still perform necessary internal actions), otherwise it's almost always true
-typedef BOOL (PATCH_CALLTYPE *FEngineChatCommand)(CTString &strResult, INDEX iClient, const CTString &strArguments);
+typedef PatchBOOL (PATCH_CALLTYPE *FEngineChatCommand)(CTString &strResult, PatchINDEX iClient, const CTString &strArguments);
 
 // Function prototype compatible with C API
 // These functions should be used instead of FEngineChatCommand when Serious Engine is not available *or* your module
 // is built using a compiler that differs from the one Serious Engine was build with (MSVC 6.0 for 1.05 and 1.07)
-typedef BOOL (PATCH_CALLTYPE *FPureChatCommand)(ChatCommandResultStr &strResult, INDEX iClient, const char *strArguments);
+typedef PatchBOOL (PATCH_CALLTYPE *FPureChatCommand)(ChatCommandResultStr &strResult, PatchINDEX iClient, const char *strArguments);
 
 // Chat command access levels
 enum EChatCommandAccessLevel {
@@ -44,7 +44,7 @@ enum EChatCommandAccessLevel {
 };
 
 // Callback function for determining whether a chat command is currently usable by some client
-typedef BOOL (PATCH_CALLTYPE *FCheckChatCommand)(INDEX iClient);
+typedef PatchBOOL (PATCH_CALLTYPE *FCheckChatCommand)(PatchINDEX iClient);
 
 // Register a new chat command with a Serious Engine compatible function
 PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommand(const char *strName, FEngineChatCommand pFunction);
@@ -56,21 +56,21 @@ PATCH_API void PATCH_CALLTYPE ClassicsChat_RegisterCommandPure(const char *strNa
 PATCH_API void PATCH_CALLTYPE ClassicsChat_UnregisterCommand(const char *strName);
 
 // Check whether some chat command has been registered
-PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_CommandExists(const char *strName);
+PATCH_API PatchBOOL PATCH_CALLTYPE ClassicsChat_CommandExists(const char *strName);
 
 // Set access level for some chat command and whether to hide it from regular clients when listing it using the "!help" command
 // Returns true if the access has been updated
-PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, BOOL bHidden);
+PATCH_API PatchBOOL PATCH_CALLTYPE ClassicsChat_SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, PatchBOOL bHidden);
 
 // Set a callback function for some chat command for checking whether it's currently usable and should be listed using the "!help" command
 // Returns true if the callback function has been updated
-PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandCheck(const char *strName, FCheckChatCommand pFunction);
+PATCH_API PatchBOOL PATCH_CALLTYPE ClassicsChat_SetCommandCheck(const char *strName, FCheckChatCommand pFunction);
 
 // Set useful usage information about some chat command when listing it using the "!help" command
 // strArgumentList - List of arguments that the command accepts surrounded by <> (for required arguments) or by [] (for optional arguments), for example: "<index> <time> [message]"
 // strDescription - Short description of the command's purpose
 // Returns true if the infomation has been updated
-PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription);
+PATCH_API PatchBOOL PATCH_CALLTYPE ClassicsChat_SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription);
 
 // Returns name of the currently processed command for distinguishing behavior using the same chat command callbacks
 // Only valid during execution of the following command callbacks (otherwise returns NULL):
@@ -79,7 +79,7 @@ PATCH_API const char *PATCH_CALLTYPE ClassicsChat_CurrentCommand(void);
 
 // Specify user data for some chat command
 // Returns true if the user data has been updated
-PATCH_API BOOL PATCH_CALLTYPE ClassicsChat_SetCommandUserData(const char *strName, void *pUserData);
+PATCH_API PatchBOOL PATCH_CALLTYPE ClassicsChat_SetCommandUserData(const char *strName, void *pUserData);
 
 // Retrieve specified user data for some chat command
 // Returns NULL if user data hasn't been specified or the command doesn't exist
@@ -96,13 +96,13 @@ public:
   virtual void RegisterCommandPure(const char *strName, FPureChatCommand pFunction) { ClassicsChat_RegisterCommandPure(strName, pFunction); };
   virtual void UnregisterCommand(const char *strName) { ClassicsChat_UnregisterCommand(strName); };
 
-  virtual BOOL SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, BOOL bHidden) { return ClassicsChat_SetCommandAccess(strName, eAccess, bHidden); };
-  virtual BOOL SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription) { return ClassicsChat_SetCommandInfo(strName, strArgumentList, strDescription); };
-  virtual BOOL SetCommandCheck(const char *strName, FCheckChatCommand pFunction) { return ClassicsChat_SetCommandCheck(strName, pFunction); };
+  virtual PatchBOOL SetCommandAccess(const char *strName, EChatCommandAccessLevel eAccess, PatchBOOL bHidden) { return ClassicsChat_SetCommandAccess(strName, eAccess, bHidden); };
+  virtual PatchBOOL SetCommandInfo(const char *strName, const char *strArgumentList, const char *strDescription) { return ClassicsChat_SetCommandInfo(strName, strArgumentList, strDescription); };
+  virtual PatchBOOL SetCommandCheck(const char *strName, FCheckChatCommand pFunction) { return ClassicsChat_SetCommandCheck(strName, pFunction); };
 
   virtual const char *CurrentCommand(void) { return ClassicsChat_CurrentCommand(); };
-  virtual BOOL CommandExists(const char *strName) { return ClassicsChat_CommandExists(strName); };
-  virtual BOOL SetCommandUserData(const char *strName, void *pUserData) { return ClassicsChat_SetCommandUserData(strName, pUserData); };
+  virtual PatchBOOL CommandExists(const char *strName) { return ClassicsChat_CommandExists(strName); };
+  virtual PatchBOOL SetCommandUserData(const char *strName, void *pUserData) { return ClassicsChat_SetCommandUserData(strName, pUserData); };
   virtual void *GetCommandUserData(const char *strName) { return ClassicsChat_GetCommandUserData(strName); };
 };
 

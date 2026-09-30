@@ -15,7 +15,7 @@ struct FuncPatch_t
   virtual const char *GetName(void) const = 0;
 
   // Calculate hash value of this function patch
-  virtual ULONG GetHash(void) const = 0;
+  virtual PatchU32 GetHash(void) const = 0;
 
   // Check whether the function patch is active right now
   virtual bool IsPatched(void) const = 0;
