@@ -34,14 +34,17 @@
 enum EVerifyAPIResult
 {
   k_EVerifyAPIResult_OK = 0,
-  k_EVerifyAPIResult_NotRunning = 1, // Classics Patch hasn't been initialized yet
+  k_EVerifyAPIResult_NotRunning = 1, // Classics Patch hasn't been initialized yet (OBSOLETE - Use ClassicsPatchAPI_IsRunning instead)
   k_EVerifyAPIResult_VersionMismatch = 2, // Classics Patch appears to be out of date
 };
 
 // Verify Classics Patch API that is being hooked
-// Sets error message to pOutErrMsg if the result is not OK
+// ulInterfaceVersion - API version to compare against, which should always be equal to CLASSICSPATCH_INTERFACE_VERSION
+// pOutErrMsg - Optional pointer to the error message buffer that gets set if the result is not OK (may be set to NULL)
 PATCH_API EVerifyAPIResult PATCH_CALLTYPE ClassicsPatchAPI_VerifyInternal(PatchVer_t ulInterfaceVersion, ClassicsPatchErrMsg *pOutErrMsg);
 
+// Verify Classics Patch API that is being hooked
+// pOutErrMsg - Optional pointer to the error message buffer that gets set if the result is not OK (may be set to NULL)
 inline EVerifyAPIResult ClassicsPatchAPI_Verify(ClassicsPatchErrMsg *pOutErrMsg)
 {
   return ClassicsPatchAPI_VerifyInternal(CLASSICSPATCH_INTERFACE_VERSION, pOutErrMsg);
@@ -104,7 +107,7 @@ PATCH_API int PATCH_CALLTYPE ClassicsPatch_PostInitPatches(const char *strEngine
 // If the API library is not linked, this interface can only be accessed *after* Classics Patch
 // initialization through the game shell using "ClassicsPatchAPI" symbol like this:
 //    CShellSymbol *pssAPI = _pShell->GetSymbol("ClassicsPatchAPI", TRUE);
-//    IClassicsPatchAPI *pAPI = (pssAPI ? pssAPI->ss_pvValue : NULL);
+//    IClassicsPatchAPI *pAPI = (pssAPI ? (IClassicsPatchAPI *)pssAPI->ss_pvValue : NULL);
 //
 // NOTE: The old "CoreAPI" symbol is still available but is now deprecated and acts as an alias
 // for the new symbol. It is left purely for compatibility purposes in case some mod checks for
@@ -153,6 +156,29 @@ struct ClassicsPatchGlobalFunctions
   FPreInitPatches _PreInitPatches;
   FPostInitPatches _PostInitPatches;
 
+  ClassicsPatchGlobalFunctions() {
+    _VerifyInternal = NULL;
+    _IsRunning = NULL;
+    _Setup = NULL;
+    _Init = NULL;
+    _Shutdown = NULL;
+    _PreInitPatches = NULL;
+    _PostInitPatches = NULL;
+  };
+
+  // Make sure that all functions exist after retrieving them
+  inline bool VerifyAllFunctions(void) {
+    if (!_VerifyInternal) return false;
+    if (!_IsRunning) return false;
+    if (!_Setup) return false;
+    if (!_Init) return false;
+    if (!_Shutdown) return false;
+    if (!_PreInitPatches) return false;
+    if (!_PostInitPatches) return false;
+
+    return true;
+  };
+
   // Simple wrapper for ClassicsPatchAPI_Verify()
   inline EVerifyAPIResult _Verify(ClassicsPatchErrMsg *pOutErrMsg) {
     return _VerifyInternal(CLASSICSPATCH_INTERFACE_VERSION, pOutErrMsg);
@@ -178,7 +204,7 @@ inline bool ClassicsPatch_GetGlobalFunctionsFromModule(ClassicsPatchGlobalFuncti
     pFunctions->_PreInitPatches  = (ClassicsPatchGlobalFunctions::FPreInitPatches)GetProcAddress(hCore, "ClassicsPatch_PreInitPatches");
     pFunctions->_PostInitPatches = (ClassicsPatchGlobalFunctions::FPostInitPatches)GetProcAddress(hCore, "ClassicsPatch_PostInitPatches");
 
-    return true;
+    return pFunctions->VerifyAllFunctions();
   }
 
   return false;
