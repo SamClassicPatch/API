@@ -59,6 +59,8 @@ void PATCH_CALLTYPE IWorldEvents_OnWorldLoad(CWorld *pwo, const CTFileName &fnmW
 void PATCH_CALLTYPE IListenerEvents_OnSendEvent(CEntity *pen, const CEntityEvent &ee);
 void PATCH_CALLTYPE IListenerEvents_OnReceiveItem(CEntity *penPlayer, const CEntityEvent &ee, PatchBOOL bPickedUp);
 void PATCH_CALLTYPE IListenerEvents_OnCallProcedure(CEntity *pen, const CEntityEvent &ee);
+void PATCH_CALLTYPE IListenerEvents_OnJumpProcedure(CEntity *pen, const CEntityEvent &ee);
+void PATCH_CALLTYPE IListenerEvents_OnReturnProcedure(CEntity *pen, const CEntityEvent &ee);
 
 // Timer
 void PATCH_CALLTYPE ITimerEvents_OnTick(void);

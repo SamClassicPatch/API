@@ -191,6 +191,12 @@ struct IListenerEvents
 
   // Upon calling an internal subautomation within entity logic via CRationalEntity::Call()
   void (PATCH_CALLTYPE *OnCallProcedure)(CEntity *pen, const CEntityEvent &ee);
+
+  // Upon calling an internal subautomation within entity logic via CRationalEntity::Jump()
+  void (PATCH_CALLTYPE *OnJumpProcedure)(CEntity *pen, const CEntityEvent &ee);
+
+  // Upon calling an internal subautomation within entity logic via CRationalEntity::Return()
+  void (PATCH_CALLTYPE *OnReturnProcedure)(CEntity *pen, const CEntityEvent &ee);
 };
 
 // Events for executing simulation-independent actions every game tick
