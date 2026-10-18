@@ -8,7 +8,7 @@
 
 #include "classicspatch_common.h"
 
-// Various engine classes passed into functions by pointer
+// Various engine types passed into functions
 class CAnyProjection3D;
 class CDrawPort;
 class CEntity;
@@ -20,6 +20,11 @@ class CPlayerTarget;
 class CTFileName;
 class CTString;
 class CWorld;
+
+enum DamageType;
+
+template<class Type, int iDimensions> class Vector;
+typedef Vector<FLOAT, 3> FLOAT3D;
 
 //================================================================================================//
 // Defining plugin events
@@ -197,6 +202,13 @@ struct IListenerEvents
 
   // Upon calling an internal subautomation within entity logic via CRationalEntity::Return()
   void (PATCH_CALLTYPE *OnReturnProcedure)(CEntity *pen, const CEntityEvent &ee);
+
+  // After inflicting damage to a specific entity via CEntity::InflictDirectDamage()
+  // penCaller - entity that actually executed InflictDirectDamage()
+  // penTarget - entity that was damaged (should always be set to a valid entity)
+  // penInflictor - entity that dealt the damage (may be different from penCaller or even NULL)
+  void (PATCH_CALLTYPE *OnDamage)(CEntity *penCaller, CEntity *penTarget, CEntity *penInflictor,
+    DamageType dmtType, FLOAT fDamage, const FLOAT3D &vHitPoint, const FLOAT3D &vDirection);
 };
 
 // Events for executing simulation-independent actions every game tick
