@@ -62,7 +62,7 @@ void PATCH_CALLTYPE IListenerEvents_OnCallProcedure(CEntity *pen, const CEntityE
 void PATCH_CALLTYPE IListenerEvents_OnJumpProcedure(CEntity *pen, const CEntityEvent &ee);
 void PATCH_CALLTYPE IListenerEvents_OnReturnProcedure(CEntity *pen, const CEntityEvent &ee);
 void PATCH_CALLTYPE IListenerEvents_OnDamage(CEntity *penCaller, CEntity *penTarget, CEntity *penInflictor,
-  DamageType dmtType, FLOAT fDamage, const FLOAT3D &vHitPoint, const FLOAT3D &vDirection);
+  INDEX dmtType, FLOAT fDamage, const PatchFLOAT3D &vHitPoint, const PatchFLOAT3D &vDirection);
 
 // Timer
 void PATCH_CALLTYPE ITimerEvents_OnTick(void);

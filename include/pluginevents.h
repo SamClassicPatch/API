@@ -21,10 +21,10 @@ class CTFileName;
 class CTString;
 class CWorld;
 
-enum DamageType;
-
-template<class Type, int iDimensions> class Vector;
-typedef Vector<FLOAT, 3> FLOAT3D;
+// Substitute for FLOAT3D
+struct PatchFLOAT3D {
+  FLOAT vector[3];
+};
 
 //================================================================================================//
 // Defining plugin events
@@ -208,7 +208,7 @@ struct IListenerEvents
   // penTarget - entity that was damaged (should always be set to a valid entity)
   // penInflictor - entity that dealt the damage (may be different from penCaller or even NULL)
   void (PATCH_CALLTYPE *OnDamage)(CEntity *penCaller, CEntity *penTarget, CEntity *penInflictor,
-    DamageType dmtType, FLOAT fDamage, const FLOAT3D &vHitPoint, const FLOAT3D &vDirection);
+    INDEX dmtType, FLOAT fDamage, const PatchFLOAT3D &vHitPoint, const PatchFLOAT3D &vDirection);
 };
 
 // Events for executing simulation-independent actions every game tick
