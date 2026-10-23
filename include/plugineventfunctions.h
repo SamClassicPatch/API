@@ -39,6 +39,7 @@ void PATCH_CALLTYPE IPacketEvents_OnCharacterConnect(PatchINDEX iClient, CPlayer
 PatchBOOL PATCH_CALLTYPE IPacketEvents_OnCharacterChange(PatchINDEX iClient, PatchINDEX iPlayer, CPlayerCharacter &pc);
 void PATCH_CALLTYPE IPacketEvents_OnPlayerAction(PatchINDEX iClient, PatchINDEX iPlayer, CPlayerAction &pa, PatchINDEX iResent);
 PatchBOOL PATCH_CALLTYPE IPacketEvents_OnChatMessage(PatchINDEX iClient, PatchU32 ulFrom, PatchU32 ulTo, CTString &strMessage);
+void PATCH_CALLTYPE IPacketEvents_OnChatOutput(const ULONG ulFrom, const CTString &strFrom, CTString &strSender, CTString &strMessage);
 
 // Game
 void PATCH_CALLTYPE IGameEvents_OnGameStart(void);

@@ -125,8 +125,18 @@ struct IPacketEvents
 
   // Upon receiving a chat message addressed from specific players to other players
   // If this method returns false, it won't be shown in chat as a regular chat message
+  // ulFrom - bit mask of players that the chat message has been sent from
+  // ulTo - bit mask of players that the chat message is addressed to (equal to -1 / 0xFFFFFFFF for public messages)
   // strMessage - chat message that may be modified before being passed into the internal chat command parser
   PatchBOOL (PATCH_CALLTYPE *OnChatMessage)(PatchINDEX iClient, PatchU32 ulFrom, PatchU32 ulTo, CTString &strMessage);
+
+  // Upon receiving a chat message from the server to be displayed in chat for this client locally
+  // If the sender name or the message are set to empty strings, no chat message will be printed out
+  // ulFrom - bit mask of players that the chat message has been sent from
+  // strFrom - symbolic name of the chat sender (e.g. "Server", "Client 1", "Client 2" etc.)
+  // strSender - name(s) of the chat message senders that may be modified before being printed out in the console
+  // strMessage - chat message that may be modified before being printed out in the console
+  void (PATCH_CALLTYPE *OnChatOutput)(const ULONG ulFrom, const CTString &strFrom, CTString &strSender, CTString &strMessage);
 };
 
 // Events for catching generic game actions
